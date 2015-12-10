@@ -1,0 +1,7 @@
+<h1>Algorithme = {{ object.name }}</h1>
+Bienvenue.
+{% for implem in object.implementation_set.all %}
+    <hr />
+    Implémentation par {{ implem.user }}
+    {{ implem.code }}
+{% endfor %}
