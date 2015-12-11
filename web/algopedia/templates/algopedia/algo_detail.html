@@ -1,3 +1,6 @@
+{% extends "algopedia/base.html" %}
+{% block content %}
+
 <h1>Algorithme = {{ object.name }}</h1>
 Bienvenue.
 {% for implem in object.implementation_set.all %}
@@ -5,3 +8,5 @@ Bienvenue.
     Implémentation par {{ implem.user }}
     {{ implem.code }}
 {% endfor %}
+
+{% endblock %}
