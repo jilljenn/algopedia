@@ -19,5 +19,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^user/', include('allauth.urls')),
     url(r'^', include('algopedia.urls', namespace='algopedia')),
 ]
