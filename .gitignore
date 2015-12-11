@@ -1,2 +1,6 @@
 .DS_Store
 venv
+__pycache__/
+web/db.sqlite3
+*.pyc
+*.pyo
