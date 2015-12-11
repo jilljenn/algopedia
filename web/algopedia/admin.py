@@ -1,5 +1,6 @@
+
 from django.contrib import admin
-from algopedia.models import Algo, Implementation, Language
+from algopedia.models import Algo, Implementation, Language, Category
 
 class AlgoAdmin(admin.ModelAdmin):
     list_display = ['name']
