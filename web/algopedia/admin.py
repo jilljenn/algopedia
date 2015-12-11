@@ -12,3 +12,4 @@ class ImplementationAdmin(admin.ModelAdmin):
 admin.site.register(Algo, AlgoAdmin)
 admin.site.register(Implementation, ImplementationAdmin)
 admin.site.register(Language)
+admin.site.register(Category)
