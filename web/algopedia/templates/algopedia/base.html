@@ -19,6 +19,12 @@
     <![endif]-->
 </head>
 <body>
+<header>
+<ul>{# TODO class="active" if current page #}
+    <li><a href="{% url 'algopedia:algo-list' %}">Algorithms</a></li>
+    <li><a href="{% url 'algopedia:category-list' %}">Categories</a></li>
+</ul>
+</header>
 <div class="container">
 {% if request.user.is_authenticated %}
     Hello {{ request.user.username }}
