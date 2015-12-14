@@ -26,6 +26,9 @@ class Implementation(models.Model):
     code = models.TextField()
     lang = models.ForeignKey('Language')
 
+    def get_absolute_url(self):
+       return reverse('algopedia:implementation-detail', kwargs={'pk': self.pk})
+
 
 class Language(models.Model):
     name = models.CharField(max_length=42, unique=True)

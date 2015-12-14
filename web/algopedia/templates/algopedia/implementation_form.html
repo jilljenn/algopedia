@@ -1,0 +1,12 @@
+{% extends "algopedia/base.html" %}
+{% block content %}
+
+<h1>Ajouter une implémentation</h1>
+Algo : {{ algo.name }}
+<form action="" method="POST">
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" />
+</form>
+
+{% endblock %}
