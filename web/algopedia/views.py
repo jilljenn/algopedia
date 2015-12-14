@@ -50,6 +50,15 @@ def categoryDetail(request, pk):
     return render(request, 'algopedia/algo_list.html', context)
 
 
+class CategoryList(ListView):
+    model = Category
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryList, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        return context
+
+
 class ImplementationList(ListView):
     model = Implementation
 
