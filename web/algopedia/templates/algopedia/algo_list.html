@@ -9,7 +9,7 @@
         Categories :
         <ul>
         {% for category in object.category.all %}
-          <li>{{ category.name}}</li>
+          <li><a href="{% url 'algopedia:category-detail' category.pk %}">{{ category.name}}</a></li>
         {% endfor %}
         </ul>
     </li>
