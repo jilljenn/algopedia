@@ -13,5 +13,14 @@
 {% block content %}
 {% endblock %}
 </div>
+<footer>
+    <div class="container">
+        <ul>
+        {% for cat in categories %}
+            <li><a href="{% url 'algopedia:category-detail' cat.pk %}"{% if cat.pk in categories_current %} class="active"{% endif %}>{{ cat.name }}</a> ({{ cat.num }})</li>
+        {% endfor %}
+        </ul>
+    </div>
+</footer>
 </body>
 </html>
