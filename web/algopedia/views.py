@@ -20,6 +20,7 @@ class AlgoList(ListView):
     def get_context_data(self, **kwargs):
         context = super(AlgoList, self).get_context_data(**kwargs)
         context = populate_context(context)
+        context['title'] += " - algo - list"
         return context
 
 
@@ -30,6 +31,7 @@ class AlgoDetail(DetailView):
         context = super(AlgoDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['categories_current'] = [cat.pk for cat in context['object'].category.all()]
+        context['title'] += " - algo - " + context['object'].name
         return context
 
 
@@ -40,13 +42,16 @@ class AlgoCreate(CreateView):
     def get_context_data(self, **kwargs):
         context = super(AlgoCreate, self).get_context_data(**kwargs)
         context = populate_context(context)
+        context['title'] += " - algo - create"
         return context
 
 
 def categoryDetail(request, pk):
     context = populate_context({})
+    context['category'] = get_object_or_404(Category, pk=pk)
     context['object_list'] = Algo.objects.filter(category=pk)
     context['categories_current'] = [int(pk)]
+    context['title'] += " - category - " + context['category'].name
     return render(request, 'algopedia/algo_list.html', context)
 
 
@@ -56,6 +61,7 @@ class CategoryList(ListView):
     def get_context_data(self, **kwargs):
         context = super(CategoryList, self).get_context_data(**kwargs)
         context = populate_context(context)
+        context['title'] += " - category - list"
         return context
 
 
@@ -78,6 +84,7 @@ class ImplementationCreate(CreateView):
         context = populate_context(context)
         context['algo'] = get_object_or_404(Algo, pk=self.kwargs['algo'])
         context['categories_current'] = [cat.pk for cat in context['algo'].category.all()]
+        context['title'] += " - implementation - create"
         return context
 
     def form_valid(self, form):
@@ -92,6 +99,7 @@ class ImplementationDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ImplementationDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
+        context['title'] += " - implementation - detail"
         context['categories_current'] = [cat.pk for cat in context['object'].algo.category.all()]
         return context
 
