@@ -33,15 +33,6 @@ class AlgoDetail(DetailView):
         return context
 
 
-class ImplementationList(ListView):
-    model = Implementation
-
-    def get_context_data(self, **kwargs):
-        context = super(ImplementationList, self).get_context_data(**kwargs)
-        context = populate_context(context)
-        return context
-
-
 class AlgoCreate(CreateView):
     model = Algo
     fields = ['name', 'description']
