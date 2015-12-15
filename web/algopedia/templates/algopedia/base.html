@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     {# IE10 viewport hack for Surface/desktop Windows 8 bug #}
     <link rel="stylesheet" href="{% static 'algopedia/css/ie10-viewport-bug-workaround.css' %}">
-    <link rel="stylesheet" href="{% static 'algopedia/css/style.css' %}"> 
+    <link rel="stylesheet" href="{% static 'algopedia/css/style.css' %}">
     {# HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries #}
     {# WARNING: Respond.js doesn't work if you view the page via file:// #}
     <!--[if lt IE 9]>
@@ -23,31 +23,33 @@
 <body>
 {% url 'algopedia:algo-list' as url_algo_list %}
 {% url 'algopedia:category-list' as url_category_list %}
-<header class="container">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-header" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="/" class="navbar-brand{% if request.path = '/' %} active{% endif %}">Algopedia</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-navbar-collapse-header">
-                <ul class="nav navbar-nav">
-                    <li{% if request.path = url_algo_list %} class="active"{% endif %}>
-                        <a href="{% url 'algopedia:algo-list' %}">Algorithms</a>
-                    </li>
-                    <li{% if request.path = url_category_list %} class="active"{% endif %}>
-                        <a href="{% url 'algopedia:category-list' %}">Categories</a>
-                    </li>
-                </ul>
-                <div class="navbar-right">
-                {% if request.user.is_authenticated %}
-                    <p class="navbar-text">Hello {{ request.user.username }} !</p>
-                {% endif %}
+<header>
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-header" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/" class="navbar-brand{% if request.path = '/' %} active{% endif %}">Algopedia</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-navbar-collapse-header">
+                    <ul class="nav navbar-nav">
+                        <li{% if request.path = url_algo_list %} class="active"{% endif %}>
+                            <a href="{% url 'algopedia:algo-list' %}">Algorithms</a>
+                        </li>
+                        <li{% if request.path = url_category_list %} class="active"{% endif %}>
+                            <a href="{% url 'algopedia:category-list' %}">Categories</a>
+                        </li>
+                    </ul>
+                    <div class="navbar-right">
+                    {% if request.user.is_authenticated %}
+                        <p class="navbar-text">Hello {{ request.user.username }} !</p>
+                    {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
