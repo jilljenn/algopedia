@@ -46,11 +46,14 @@
                             <a href="{% url 'algopedia:category-list' %}">Categories</a>
                         </li>
                     </ul>
-                    <div class="navbar-right">
+                    <ul class="nav navbar-nav navbar-right">
                     {% if request.user.is_authenticated %}
-                        <p class="navbar-text">Hello {{ request.user.username }} !</p>
+                        <li><a href="{% url 'account_logout' %}">Logout ({{ request.user.username }})</a></li>
+                    {% else %}
+                        <li><a href="{% url 'account_login' %}?next={{ request.path|urlencode }}">Login</a></li>
+                        <li><a href="{% url 'account_signup' %}">Sign up</a></li>
                     {% endif %}
-                    </div>
+                    </ul>
                 </div>
             </div>
         </div>
