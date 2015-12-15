@@ -51,13 +51,22 @@
 {% block content %}
 {% endblock %}
 </div>
-<footer>
+<footer class="footer">
     <div class="container">
-        <ul>
-        {% for cat in categories %}
-            <li><a href="{% url 'algopedia:category-detail' cat.pk %}"{% if cat.pk in categories_current %} class="active"{% endif %}>{{ cat.name }}</a> ({{ cat.num }})</li>
-        {% endfor %}
-        </ul>
+        <div class="col-xs-12 col-md-8">
+            <h3>Categories :</h3>
+            <ul>
+            {% for cat in categories %}
+                <li><a href="{% url 'algopedia:category-detail' cat.pk %}"{% if cat.pk in categories_current %} class="active"{% endif %}>{{ cat.name }}</a> ({{ cat.num }})</li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="col-xs-12 col-md-4">
+            <h3>Links</h3>
+            <ul>
+                <li><a href="http://tryalgo.org">Tryalgo</a>
+            </ul>
+        </div>
     </div>
 </footer>
 {# Bootstrap core JavaScript #}
