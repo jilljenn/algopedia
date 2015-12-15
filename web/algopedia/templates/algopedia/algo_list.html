@@ -1,7 +1,7 @@
 {% extends "algopedia/base.html" %}
 {% block content %}
 
-<h1>Liste des algorithmes</h1>
+<h1>{% block main_title %}Liste des algorithmes{% endblock %}</h1>
 <ul>
 {% for object in object_list %}
     <li>

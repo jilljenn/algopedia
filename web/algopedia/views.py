@@ -52,7 +52,7 @@ def categoryDetail(request, pk):
     context['object_list'] = Algo.objects.filter(category=pk)
     context['categories_current'] = [int(pk)]
     context['title'] += " - category - " + context['category'].name
-    return render(request, 'algopedia/algo_list.html', context)
+    return render(request, 'algopedia/category_detail.html', context)
 
 
 class CategoryList(ListView):
