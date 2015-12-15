@@ -12,3 +12,6 @@
 .footer h3 {
   font-size: 1.3em;
 }
+.footer .active {
+  text-decoration: underline;
+}

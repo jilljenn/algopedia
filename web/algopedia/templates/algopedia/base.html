@@ -21,6 +21,8 @@
     <![endif]-->
 </head>
 <body>
+{% url 'algopedia:algo-list' as url_algo_list %}
+{% url 'algopedia:category-list' as url_category_list %}
 <header class="container">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -31,12 +33,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/" class="navbar-brand">Algopedia</a>
+                <a href="/" class="navbar-brand{% if request.path = '/' %} active{% endif %}">Algopedia</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-navbar-collapse-header">
-                <ul class="nav navbar-nav">{# TODO class="active" if current page #}
-                    <li><a href="{% url 'algopedia:algo-list' %}">Algorithms</a></li>
-                    <li><a href="{% url 'algopedia:category-list' %}">Categories</a></li>
+                <ul class="nav navbar-nav">
+                    <li{% if request.path = url_algo_list %} class="active"{% endif %}>
+                        <a href="{% url 'algopedia:algo-list' %}">Algorithms</a>
+                    </li>
+                    <li{% if request.path = url_category_list %} class="active"{% endif %}>
+                        <a href="{% url 'algopedia:category-list' %}">Categories</a>
+                    </li>
                 </ul>
                 <div class="navbar-right">
                 {% if request.user.is_authenticated %}
