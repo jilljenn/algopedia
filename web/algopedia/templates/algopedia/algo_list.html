@@ -7,9 +7,9 @@
     <li>
         <a href="{% url 'algopedia:algo-detail' object.pk %}">{{ object.name }}</a>
         Categories :
-        <ul>
+        <ul class="categories">
         {% for category in object.category.all %}
-          <li><a href="{% url 'algopedia:category-detail' category.pk %}">{{ category.name}}</a></li>
+          <li><a href="{% url 'algopedia:category-detail' category.pk %}" class="label label-primary">{{ category.name}}</a></li>
         {% endfor %}
         </ul>
     </li>

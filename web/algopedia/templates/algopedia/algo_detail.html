@@ -4,9 +4,9 @@
 <h1>Algorithme = {{ object.name }}</h1>
 
 <h3>Categories:</h3>
-<ul>
+<ul class="categories">
 {% for cat in object.category.all %}
-    <li><a href="{% url 'algopedia:category-detail' cat.pk %}">{{ cat.name }}</a></li>
+    <li><a href="{% url 'algopedia:category-detail' cat.pk %}" class="label label-primary">{{ cat.name }}</a></li>
 {% endfor %}
 </ul>
 
