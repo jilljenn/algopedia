@@ -51,6 +51,7 @@
                     data-implementation-user="{{ implem.user }}"
                     data-implementation-lang="{{ implem.lang }}"
                     data-toggle="modal" data-target="#modal_implementation_detail">See</a>
+                <a href="{% url 'algopedia:implementation-detail' implem.pk %}" class="btn btn-default">Details</a>
                 {% if implem.user.pk = user.pk %}
                     <a href="#" class="btn btn-default">Edit</a>
                 {% endif %}
