@@ -18,8 +18,8 @@ Description :
 <hr>
 
 Implementations :
-<table>
-    <tr><th>Language</th><th>Author</th></tr>
+<table class="table table-striped table-bordered">
+    <tr><th>Language</th><th>Author</th><th>Link</th></tr>
     {% for implem in object.implementation_set.all %}
         <tr><td>{{ implem.lang.name }}</td><td>{{ implem.user }}</td><td><a href="{% url 'algopedia:implementation-detail' implem.pk %}">see</a></td></tr>
     {% endfor %}
