@@ -104,3 +104,6 @@ class ImplementationDetail(DetailView):
         return context
 
 
+def ajaxImplementationDetail(request, pk):
+    context = {'object' : get_object_or_404(Implementation, pk=pk)}
+    return render(request, 'algopedia/ajax_implementation_detail.html', context)
