@@ -16,21 +16,38 @@
     {# HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries #}
     {# WARNING: Respond.js doesn't work if you view the page via file:// #}
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 <body>
-<header>
-<ul>{# TODO class="active" if current page #}
-    <li><a href="{% url 'algopedia:algo-list' %}">Algorithms</a></li>
-    <li><a href="{% url 'algopedia:category-list' %}">Categories</a></li>
-</ul>
+<header class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-header" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">Algopedia</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-navbar-collapse-header">
+                <ul class="nav navbar-nav">{# TODO class="active" if current page #}
+                    <li><a href="{% url 'algopedia:algo-list' %}">Algorithms</a></li>
+                    <li><a href="{% url 'algopedia:category-list' %}">Categories</a></li>
+                </ul>
+                <div class="navbar-right">
+                {% if request.user.is_authenticated %}
+                    <p class="navbar-text">Hello {{ request.user.username }} !</p>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
 <div class="container">
-{% if request.user.is_authenticated %}
-    Hello {{ request.user.username }}
-{% endif %}
 {% block content %}
 {% endblock %}
 </div>
