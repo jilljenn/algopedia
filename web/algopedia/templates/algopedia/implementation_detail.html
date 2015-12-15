@@ -3,6 +3,6 @@
 
 <h1>Implementation de {{ object.algo.name }} par {{ object.user }}</h1>
 {{ object.lang }}
-{{ object.code }}
+{{ object.get_code|safe }}
 
 {% endblock %}

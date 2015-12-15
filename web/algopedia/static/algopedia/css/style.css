@@ -18,3 +18,14 @@ ul.categories li {
   display: inline-block;
   margin: 3px 3px;
 }
+/* pygments : reset bootstrap style */
+.highlighttable pre {
+  background-color: transparent;
+  border: none;
+}
+.highlighttable .highlight {
+  border-radius: 12px;
+}
+.highlighttable tr, .highlighttable .code {
+  width: 100%;
+}
