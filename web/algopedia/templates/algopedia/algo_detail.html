@@ -2,11 +2,27 @@
 {% block content %}
 
 <h1>Algorithme = {{ object.name }}</h1>
-Bienvenue.
-{% for implem in object.implementation_set.all %}
-    <hr />
-    Implémentation par {{ implem.user }}
-    {{ implem.code }}
+
+Categories :
+<ul>
+{% for cat in object.category.all %}
+    <li><a href="{% url 'algopedia:category-detail' cat.pk %}">{{ cat.name }}</a></li>
 {% endfor %}
+</ul>
+
+<hr>
+
+Description :
+{{ object.description }}
+
+<hr>
+
+Implementations :
+<table>
+    <tr><th>Language</th><th>Author</th></tr>
+    {% for implem in object.implementation_set.all %}
+        <tr><td>{{ implem.lang.name }}</td><td>{{ implem.user }}</td><td><a href="{% url 'algopedia:implementation-detail' implem.pk %}">see</a></td></tr>
+    {% endfor %}
+</table>
 
 {% endblock %}
