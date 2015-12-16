@@ -32,18 +32,21 @@ class Implementation(models.Model):
     lang = models.ForeignKey('Language')
 
     def get_absolute_url(self):
-       return reverse('algopedia:implementation-detail', kwargs={'pk': self.pk})
+        return reverse('algopedia:implementation-detail', kwargs={'pk': self.pk})
 
     def get_code(self):
-       try:
-           lexer = get_lexer_by_name(self.lang.name, stripall=True)
-       except ClassNotFound:
-           try:
-               lexer = guess_lexer(self.code)
-           except ClassNotFound:
-               lexer = TextLexer()
-       formatter = HtmlFormatter(linenos=True)
-       return highlight(self.code, lexer, formatter)
+        try:
+            lexer = get_lexer_by_name(self.lang.name, stripall=True)
+        except ClassNotFound:
+            try:
+                lexer = guess_lexer(self.code)
+            except ClassNotFound:
+                lexer = TextLexer()
+        formatter = HtmlFormatter(linenos=True)
+        return highlight(self.code, lexer, formatter)
+
+    def __str__(self):
+        return str(self.algo) + " by " + str(self.user) + " in " + str(self.lang)
 
 
 class Language(models.Model):
@@ -51,3 +54,11 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Star(models.Model):
+    user = models.ForeignKey(User)
+    implementation = models.ForeignKey(Implementation)
+
+    def __str__(self):
+        return str(self.user) + " stars " + str(self.implementation)

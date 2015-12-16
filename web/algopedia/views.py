@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
-from algopedia.models import Algo, Implementation, Category
+from algopedia.models import Algo, Implementation, Category, Star
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -32,6 +32,8 @@ class AlgoDetail(DetailView):
         context = populate_context(context)
         context['categories_current'] = [cat.pk for cat in context['object'].category.all()]
         context['title'] += " - algo - " + context['object'].name
+        if self.request.user.is_authenticated():
+            context['stars'] = [star.implementation.pk for star in Star.objects.filter(user=self.request.user).filter(implementation__algo__pk=context['object'].pk)]
         return context
 
 
@@ -101,6 +103,8 @@ class ImplementationDetail(DetailView):
         context = populate_context(context)
         context['title'] += " - implementation - detail"
         context['categories_current'] = [cat.pk for cat in context['object'].algo.category.all()]
+        if self.request.user.is_authenticated():
+            context['starred'] = Star.objects.filter(implementation__pk=context['object'].pk).filter(user=self.request.user).exists()
         return context
 
 

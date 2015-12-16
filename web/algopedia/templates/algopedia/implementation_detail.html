@@ -8,6 +8,9 @@
     <li>Algorithm: <a href="{% url 'algopedia:algo-detail' object.algo.pk %}">{{ object.algo.name }}</a></li>
     <li>Author: {{ object.user }}</li>
     <li>Language: {{ object.lang }}</li>
+    {% if user.is_authenticated %}
+        <li>Starred: <input type="checkbox" {% if starred %}checked="checked" {% endif %}</li>
+    {% endif %}
 </ul>
 
 <hr>
