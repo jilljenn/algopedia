@@ -1,8 +1,19 @@
 {% extends "algopedia/base.html" %}
 {% block content %}
 
-<h1>Implementation de {{ object.algo.name }} par {{ object.user }}</h1>
-{{ object.lang }}
+<h1>Implementation of {{ object.algo.name }}</h1>
+
+<h3>Meta</h3>
+<ul>
+    <li>Algorithm: <a href="{% url 'algopedia:algo-detail' object.algo.pk %}">{{ object.algo.name }}</a></li>
+    <li>Author: {{ object.user }}</li>
+    <li>Language: {{ object.lang }}</li>
+</ul>
+
+<hr>
+
+<h3>Code</h3>
+
 {{ object.get_code|safe }}
 
 {% endblock %}
