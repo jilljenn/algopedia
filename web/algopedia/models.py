@@ -30,6 +30,8 @@ class Implementation(models.Model):
     algo = models.ForeignKey('Algo')
     code = models.TextField()
     lang = models.ForeignKey('Language')
+    parent = models.ForeignKey('Implementation', blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
         return reverse('algopedia:implementation-detail', kwargs={'pk': self.pk})

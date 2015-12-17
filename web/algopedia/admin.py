@@ -7,7 +7,7 @@ class AlgoAdmin(admin.ModelAdmin):
 
 
 class ImplementationAdmin(admin.ModelAdmin):
-    list_display = ['algo', 'user', 'lang']
+    list_display = ['algo', 'user', 'lang', 'date']
 
 
 admin.site.register(Algo, AlgoAdmin)
