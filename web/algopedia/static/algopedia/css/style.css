@@ -29,3 +29,6 @@ ul.categories li {
 .highlighttable tr, .highlighttable .code {
   width: 100%;
 }
+.modal-footer {
+  padding: 10px;
+}
