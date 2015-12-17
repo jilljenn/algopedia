@@ -15,3 +15,16 @@ $('#modal_implementation_detail').on('show.bs.modal', function (event) {
     })
 
 })
+
+// back button close an opened modal https://gist.github.com/thedamon/9276193
+$('div.modal').on('show.bs.modal', function() {
+  var modal = this;
+  window.location.hash = modal.id;
+  window.onhashchange = function() {
+    if (!location.hash)
+      $(modal).modal('hide');
+  }
+});
+$('div.modal').on('hide.bs.modal', function() {
+  history.pushState('', document.title, window.location.pathname);
+});
