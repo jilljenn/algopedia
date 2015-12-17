@@ -1,9 +1,9 @@
 {% extends "algopedia/base.html" %}
 {% block content %}
 
-<h1>Algorithme = {{ object.name }}</h1>
+<h3>Algorithme :: {{ object.name }}</h3>
 
-<h3>Categories:</h3>
+<h5>Categories:</h5>
 <ul class="categories">
 {% for cat in object.category.all %}
     <li><a href="{% url 'algopedia:category-detail' cat.pk %}" class="label label-primary">{{ cat.name }}</a></li>
@@ -12,12 +12,12 @@
 
 <hr>
 
-<h3>Description:</h3>
+<h5>Description:</h5>
 {{ object.description }}
 
 <hr>
 
-<h3>Implementations:</h3>
+<h5>Implementations:</h5>
 <p>
     <a href="{% url 'algopedia:implementation-create' object.pk %}" class="btn btn-default">Add mine</a>
 </p>
@@ -26,10 +26,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal_implementation_detail_label">{{ object.name }}
+                <h6 class="modal-title" id="modal_implementation_detail_label">{{ object.name }}
                     by <span class="modal-title-user"></span>
                     in <span class="modal-title-lang"></span>
-                </h4>
+                </h6>
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
