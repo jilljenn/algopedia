@@ -3,15 +3,6 @@
 
 <h4>Implementation of {{ object.algo.name }}</h4>
 
-<h5>Meta</h5>
-{% with object as implem %}
-    {% include 'algopedia/implementation_descr.html' %}
-{% endwith %}
-
-<hr>
-
-<h5>Code</h5>
-
-{{ object.get_code|safe }}
+{% include 'algopedia/ajax_implementation_detail.html' %}
 
 {% endblock %}
