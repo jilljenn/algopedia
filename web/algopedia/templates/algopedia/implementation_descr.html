@@ -12,4 +12,13 @@
     {% if user.is_authenticated %}
         {#<li>Starred: <input type="checkbox" {% if implem.starred %}checked="checked" {% endif %}</li> TODO use annotate #}
     {% endif %}
+    <li>
+        <a href="#" class="btn btn-xs btn-default">
+        {% if implem.user.pk = user.pk %}
+            Edit
+        {% else %}
+            Fork
+        {% endif %}
+        </a>
+    </li>
 </ul>
