@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^categories/', views.CategoryList.as_view(), name="category-list"),
     url(r'^implementation/(?P<pk>\d+)', views.ImplementationDetail.as_view(), name="implementation-detail"),
     url(r'^implementation/add/(?P<algo>\d+)', views.ImplementationCreate.as_view(), name="implementation-create"),
+    url(r'^implementation/diff/(?P<pk1>\d+)/(?P<pk2>\d+)', views.implementationDiff, name="implementation-diff"),
 
     url(r'^ajax/implementation/(?P<pk>\d+)', views.ajaxImplementationDetail),
 ]

@@ -1,0 +1,23 @@
+{% extends "algopedia/base.html" %}
+{% block content %}
+
+<h4>Implementation :: diff</h4>
+
+<div class="container">
+    <div class="col-sm-6">
+        <h5>From</h5>
+        {% with implem1 as implem %}
+            {% include 'algopedia/implementation_descr.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-sm-6">
+        <h5>To</h5>
+        {% with implem2 as implem %}
+            {% include 'algopedia/implementation_descr.html' %}
+        {% endwith %}
+    </div>
+</div>
+
+{{ diff|safe }}
+
+{% endblock %}

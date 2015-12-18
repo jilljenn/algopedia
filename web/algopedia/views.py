@@ -7,6 +7,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from difflib import HtmlDiff
 
 def populate_context(context):
     context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
@@ -111,3 +112,14 @@ class ImplementationDetail(DetailView):
 def ajaxImplementationDetail(request, pk):
     context = {'object' : get_object_or_404(Implementation, pk=pk)}
     return render(request, 'algopedia/ajax_implementation_detail.html', context)
+
+def implementationDiff(request, pk1, pk2):
+    context = populate_context({})
+    context['implem1'] = get_object_or_404(Implementation, pk=pk1)
+    context['implem2'] = get_object_or_404(Implementation, pk=pk2)
+    context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
+    context['categories_current'] = [cat.pk for cat in context['implem1'].algo.category.all()] + \
+        [cat.pk for cat in context['implem2'].algo.category.all()]
+    context['title'] += " - implementation - diff"
+    return render(request, 'algopedia/implementation_diff.html', context)
+
