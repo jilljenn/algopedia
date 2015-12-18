@@ -1,0 +1,15 @@
+<ul>
+    <li>Algorithm: <a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></li>
+    <li>Author: {{ implem.user }}</li>
+    <li>Language: {{ implem.lang }}</li>
+    <li>Date: {{ implem.date }}</li>
+    {% if implem.parent %}
+        <li>
+            Parent: <a href="{% url 'algopedia:implementation-detail' implem.parent.pk %}">code by {{ implem.parent.user }} on {{ implem.parent.date }}</a>
+            (<a href="{% url 'algopedia:implementation-diff' implem.parent.pk implem.pk %}">diff</a>)
+        </li>
+    {% endif %}
+    {% if user.is_authenticated %}
+        {#<li>Starred: <input type="checkbox" {% if implem.starred %}checked="checked" {% endif %}</li> TODO use annotate #}
+    {% endif %}
+</ul>
