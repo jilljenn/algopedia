@@ -123,3 +123,23 @@ def implementationDiff(request, pk1, pk2):
     context['title'] += " - implementation - diff"
     return render(request, 'algopedia/implementation_diff.html', context)
 
+
+class ImplementationEdit(UpdateView):
+    model = Implementation
+    fields = ['lang', 'code']
+    template_name_suffix = '_update_form'
+
+    def get_context_data(self, **kwargs):
+        context = super(ImplementationEdit, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        context['algo'] = self.get_object().algo
+        context['categories_current'] = [cat.pk for cat in context['algo'].category.all()]
+        context['title'] += " - implementation - edit"
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.parent = get_object_or_404(Implementation, pk=form.instance.pk)
+        form.instance.pk = None # create a new row
+        return super(ImplementationEdit, self).form_valid(form)
+

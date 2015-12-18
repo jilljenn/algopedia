@@ -54,7 +54,7 @@
                     data-implementation-lang="{{ implem.lang }}"
                     data-toggle="modal" data-target="#modal_implementation_detail">See <span class="glyphicon glyphicon-search"></span></a>
                 <a href="{% url 'algopedia:implementation-detail' implem.pk %}" > | More <span class="glyphicon glyphicon-zoom-in"></span></a>
-                <a href="#">
+                <a href="{% url 'algopedia:implementation-edit' implem.pk %}">
                 {% if implem.user.pk = user.pk %}
                      | Edit <span class="glyphicon glyphicon-wrench"></span>
                 {% else %}
