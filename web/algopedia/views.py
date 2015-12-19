@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
 from algopedia.models import Algo, Implementation, Category, Star
+from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -142,4 +143,17 @@ class ImplementationEdit(UpdateView):
         form.instance.parent = get_object_or_404(Implementation, pk=form.instance.pk)
         form.instance.pk = None # create a new row
         return super(ImplementationEdit, self).form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class UserStars(TemplateView):
+    template_name = "algopedia/user_stars.html"
+
+    def get_context_data(self, **kwargs):
+        context = populate_context({})
+        context['title'] += " - stars"
+        req = Star.objects.filter(user=self.request.user)
+        context['stars'] = req.filter(active=True)
+        context['stars_old'] = req.filter(active=False)
+        return context
 
