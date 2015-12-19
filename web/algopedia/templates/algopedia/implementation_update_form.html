@@ -2,6 +2,13 @@
 {% block content %}
 
 <h4>Edit an implementation</h4>
+
+{% if request.user = object.user %}
+    <div class="alert alert-warning" role="alert">
+      <strong>Warning !</strong> When editing your own code, a new copy of your code is made !
+    </div>
+{% endif %}
+
 Algo : {{ algo.name }}
 <form action="" method="POST">
 {% csrf_token %}
