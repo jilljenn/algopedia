@@ -50,14 +50,17 @@ class AlgoCreate(CreateView):
         return context
 
 
-def categoryDetail(request, pk):
-    context = populate_context({})
-    context['category'] = get_object_or_404(Category, pk=pk)
-    context['object_list'] = Algo.objects.filter(category=pk)
-    context['categories_current'] = [int(pk)]
-    context['title'] += " - category - " + context['category'].name
-    return render(request, 'algopedia/category_detail.html', context)
+class CategoryDetail(TemplateView):
+    template_name = "algopedia/category_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(CategoryDetail, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        context['category'] = get_object_or_404(Category, pk=pk)
+        context['object_list'] = Algo.objects.filter(category=pk)
+        context['categories_current'] = [int(pk)]
+        context['title'] += " - category - " + context['category'].name
+        return context
 
 class CategoryList(ListView):
     model = Category
@@ -114,15 +117,19 @@ def ajaxImplementationDetail(request, pk):
     context = {'object' : get_object_or_404(Implementation, pk=pk)}
     return render(request, 'algopedia/ajax_implementation_detail.html', context)
 
-def implementationDiff(request, pk1, pk2):
-    context = populate_context({})
-    context['implem1'] = get_object_or_404(Implementation, pk=pk1)
-    context['implem2'] = get_object_or_404(Implementation, pk=pk2)
-    context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
-    context['categories_current'] = [cat.pk for cat in context['implem1'].algo.category.all()] + \
-        [cat.pk for cat in context['implem2'].algo.category.all()]
-    context['title'] += " - implementation - diff"
-    return render(request, 'algopedia/implementation_diff.html', context)
+class ImplementationDiff(TemplateView):
+    template_name = "algopedia/implementation_diff.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ImplementationDiff, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        context['implem1'] = get_object_or_404(Implementation, pk=kwargs['pk1'])
+        context['implem2'] = get_object_or_404(Implementation, pk=kwargs['pk2'])
+        context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
+        context['categories_current'] = [cat.pk for cat in context['implem1'].algo.category.all()] + \
+            [cat.pk for cat in context['implem2'].algo.category.all()]
+        context['title'] += " - implementation - diff"
+        return context
 
 
 class ImplementationEdit(UpdateView):
@@ -150,7 +157,8 @@ class UserStars(TemplateView):
     template_name = "algopedia/user_stars.html"
 
     def get_context_data(self, **kwargs):
-        context = populate_context({})
+        context = super(UserStars, self).get_context_data(**kwargs)
+        context = populate_context(context)
         context['title'] += " - stars"
         req = Star.objects.filter(user=self.request.user)
         context['stars'] = req.filter(active=True)
