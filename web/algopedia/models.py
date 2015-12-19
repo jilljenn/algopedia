@@ -61,6 +61,7 @@ class Language(models.Model):
 class Star(models.Model):
     user = models.ForeignKey(User)
     implementation = models.ForeignKey(Implementation)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.user) + " stars " + str(self.implementation)
