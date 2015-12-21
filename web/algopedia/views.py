@@ -54,6 +54,7 @@ class CategoryDetail(TemplateView):
     template_name = "algopedia/category_detail.html"
 
     def get_context_data(self, **kwargs):
+        pk = self.kwargs['pk']
         context = super(CategoryDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['category'] = get_object_or_404(Category, pk=pk)
