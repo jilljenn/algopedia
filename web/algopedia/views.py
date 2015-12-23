@@ -70,6 +70,7 @@ class CategoryList(ListView):
         context = super(CategoryList, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['title'] += " - category - list"
+        context['object_list'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
         return context
 
 
