@@ -1,12 +1,12 @@
 {% extends "algopedia/base.html" %}
 {% block content %}
 
-<h4 class="text-primary">Liste des categories</h4>
+<h4 class="text-primary">List of the categories</h4>
 <ul>
-{% for object in object_list %}
+{% for object in categories %}
     <li>
-        <a href="{% url 'algopedia:category-detail' object.pk %}">{{ object.name }}</a>
-        Algorithmes : {# TODO prefetch all ? #}
+        <a href="{% url 'algopedia:category-detail' object.pk %}">{{ object.name }} ({{ object.num }})</a>
+        {# TODO prefetch all ? #}
     </li>
 {% endfor %}
 </ul>
