@@ -71,6 +71,7 @@ class CategoryList(ListView):
         context = populate_context(context)
         context['title'] += " - category - list"
         context['object_list'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
+        context['algos'] = Algo.objects.all
         return context
 
 

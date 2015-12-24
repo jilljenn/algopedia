@@ -1,11 +1,25 @@
 {% extends "algopedia/base.html" %}
+
+
+
 {% block content %}
 
 <h4 class="text-primary">List of the categories</h4>
 <ul>
 {% for object in object_list %}
     <li>
-        <a href="{% url 'algopedia:category-detail' object.pk %}">{{ object.name }} ({{ object.num }})</a>
+        <div class="menu" id="menu1" onclick="afficheMenu(this)">
+            <a href="#">{{ object.name }} ({{ object.num }})</a>
+        </div>
+        <div id="sousmenu1" style="display:true"> {# TODO : Change the css to make this a drop down menu #}
+        <ul>
+            {% for algo in algos %}
+                {% if object in algo.category.all %}
+                    <li><a href="{% url 'algopedia:algo-detail' object.pk %}">{{ algo }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        </div>
     </li>
 {% endfor %}
 </ul>
