@@ -3,7 +3,7 @@ from django.views.generic.base import RedirectView
 from . import views
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(url="algos/", permanent=False), name="index"),
+    url(r'^$', views.Index.as_view(), name="index"),
     url(r'^algos/$', views.AlgoList.as_view(), name="algo-list"),
     url(r'^algo/(?P<pk>\d+)', views.AlgoDetail.as_view(), name="algo-detail"),
     url(r'^algo/add/', views.AlgoCreate.as_view(), name="algo-create"),

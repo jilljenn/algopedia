@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from difflib import HtmlDiff
 
+
 def populate_context(context):
     context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
     context['title'] = context.get('title', 'Algopedia')
@@ -24,7 +25,6 @@ class AlgoList(ListView):
         context = populate_context(context)
         context['title'] += " - algo - list"
         return context
-
 
 class AlgoDetail(DetailView):
     model = Algo
@@ -166,3 +166,11 @@ class UserStars(TemplateView):
         context['stars_old'] = req.filter(active=False)
         return context
 
+class Index(TemplateView):
+    template_name = "algopedia/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(Index, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        context['title'] += " - index"
+        return context

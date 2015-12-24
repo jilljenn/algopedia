@@ -2,7 +2,7 @@
   width: 100%;
   background-color: #f5f5f5;
   padding-bottom: 20px;
-  margin-top: 30px;
+  margin-top: 0px;
 }
 .footer h3 {
   font-size: 1.3em;
@@ -64,4 +64,37 @@ td.diff_header {
 }
 td.diff_next {
   padding: 0 1px;
+}
+
+/* Index settings*/
+.landing-alert{
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.landing-header{
+    background-size: cover;
+    min-height: 570px;
+}
+.landing-header .motto{
+    padding-top: 8%;
+    text-align: left;
+    z-index: 3;
+}
+.landing-section{
+    padding: 100px 0;
+}
+.landing-section .btn-simple{
+    padding: 0;
+}
+.landing-section .column{
+    padding: 0 75px 0 25px;
+}
+
+.navbar-relative{
+    position: relative;
+    z-index: 2;
+}
+
+.alert h5{
+    margin-bottom: 10px;
 }
