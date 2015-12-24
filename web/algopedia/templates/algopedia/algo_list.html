@@ -1,12 +1,11 @@
 {% extends "algopedia/base.html" %}
 {% block content %}
 <div class="container">
-<h4 class="text-primary">{% block main_title %}Liste des algorithmes{% endblock %}</h4>
+<h4 class="text-primary">{% block main_title %}List of the algorithms{% endblock %}</h4>
 <ul>
 {% for object in object_list %}
     <li>
         <a href="{% url 'algopedia:algo-detail' object.pk %}">{{ object.name }}</a>
-        Categories :
         <ul class="categories">
         {% for category in object.category.all %}
           <li><a href="{% url 'algopedia:category-detail' category.pk %}" class="label label-primary">{{ category.name}}</a></li>
