@@ -15,7 +15,7 @@
         <ul>
             {% for algo in algos %}
                 {% if object in algo.category.all %}
-                    <li><a href="{% url 'algopedia:algo-detail' object.pk %}">{{ algo }}</a></li>
+                    <li><a href="{% url 'algopedia:algo-detail' algo.pk %}">{{ algo }}</a></li>
                 {% endif %}
             {% endfor %}
         </ul>
