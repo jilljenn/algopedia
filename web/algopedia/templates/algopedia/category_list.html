@@ -9,7 +9,7 @@
 <ul id="menu">
 {% for object in object_list %}
     <li>
-        <div class="menu" id="menu{{ forloop.counter }}" onclick="afficheMenu(this)">
+        <div class="menu" id="menu{{ forloop.counter }}" onclick="afficheMenu(this,{{ object_list|length }})">
             <a href="#">{{ object.name }} ({{ object.num }})</a>
         </div>
         <ul>
