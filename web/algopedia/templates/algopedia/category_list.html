@@ -2,29 +2,32 @@
 
 {% block content %}
 
-
-
 <div class="container">
 <h4 class="text-primary">List of the categories</h4>
-<ul id="menu">
+
+<div class="panel-group" id="cat_accordion" role="tablist" aria-multiselectable="true">
 {% for object in object_list %}
-    <li>
-        <div class="menu" id="menu{{ forloop.counter }}" onclick="afficheMenu(this,{{ object_list|length }})">
-            <a href="#">{{ object.name }} ({{ object.num }})</a>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="cat_heading_{{ object.pk }}">
+            <h3 class="panel-title">
+              <a href="{% url 'algopedia:category-detail' object.pk %}">{{ object.name }}</a> ({{ object.num }})
+              <a class="glyphicon glyphicon-triangle-bottom" role="button" data-toggle="collapse" data-parent="#cat_accordion" href="#cat_collapse_{{ object.pk }}" aria-expanded="true" aria-controls="cat_collapse_{{ object.pk }}"></a>
+            </h3>
         </div>
-        <ul>
-        <div id="sousmenu{{ forloop.counter }}" style="display:none">
-            {% for algo in algos %}
-                <div class="sousmenu">
-                {% if object in algo.category.all %}
-                    <li><a href="{% url 'algopedia:algo-detail' algo.pk %}">{{ algo }}</a></li>
-                {% endif %}
-                </div>
-            {% endfor %}
+        <div id="cat_collapse_{{ object.pk }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cat_heading_{{ object.pk }}">
+            <div class="panel-body">
+                <ul>
+                {% for algo in algos %}
+                    {% if object in algo.category.all %}
+                        <li><a href="{% url 'algopedia:algo-detail' algo.pk %}">{{ algo }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
         </div>
-        </ul>
-    </li>
+    </div>
 {% endfor %}
-</ul>
+</div>
+
 </div>
 {% endblock %}
