@@ -1,6 +1,7 @@
 {% extends "algopedia/base.html" %}
 {% block content %}
 
+<div class="container">
 <h4>Edit an implementation</h4>
 
 {% if request.user = object.user %}
@@ -15,5 +16,6 @@ Algo : {{ algo.name }}
 {{ form.as_p }}
 <input type="submit" />
 </form>
+</div>
 
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends "algopedia/base.html" %}
 {% block content %}
 
+<div class="container">
 <h4>Add an implementation</h4>
 Algo : {{ algo.name }}
 <form action="" method="POST">
@@ -8,5 +9,6 @@ Algo : {{ algo.name }}
 {{ form.as_p }}
 <input type="submit" />
 </form>
+</div>
 
 {% endblock %}
