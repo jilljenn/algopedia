@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
-from django.db.models import Count
+from django.db.models import Count, Q
 from algopedia.models import Algo, Implementation, Category, Star
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -9,7 +9,6 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from difflib import HtmlDiff
-
 
 def populate_context(context):
     context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
@@ -32,10 +31,10 @@ class AlgoDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AlgoDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
-        context['categories_current'] = [cat.pk for cat in context['object'].category.all()]
+        context['categories_current'] = context['object'].category.values_list('pk', flat=True)
         context['title'] += " - algo - " + context['object'].name
         if self.request.user.is_authenticated():
-            context['stars'] = [star.implementation.pk for star in Star.objects.filter(user=self.request.user).filter(implementation__algo__pk=context['object'].pk)]
+            context['stars'] = [star.implementation_id for star in Star.objects.filter(user=self.request.user).filter(implementation__algo__pk=context['object'].pk)]
         return context
 
 
@@ -93,7 +92,7 @@ class ImplementationCreate(CreateView):
         context = super(ImplementationCreate, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['algo'] = get_object_or_404(Algo, pk=self.kwargs['algo'])
-        context['categories_current'] = [cat.pk for cat in context['algo'].category.all()]
+        context['categories_current'] = context['algo'].category.values_list('pk', flat=True)
         context['title'] += " - implementation - create"
         return context
 
@@ -110,7 +109,7 @@ class ImplementationDetail(DetailView):
         context = super(ImplementationDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['title'] += " - implementation - detail"
-        context['categories_current'] = [cat.pk for cat in context['object'].algo.category.all()]
+        context['categories_current'] = context['object'].algo.category.values_list('pk', flat=True)
         if self.request.user.is_authenticated():
             context['starred'] = Star.objects.filter(implementation__pk=context['object'].pk).filter(user=self.request.user).exists()
         return context
@@ -129,8 +128,7 @@ class ImplementationDiff(TemplateView):
         context['implem1'] = get_object_or_404(Implementation, pk=kwargs['pk1'])
         context['implem2'] = get_object_or_404(Implementation, pk=kwargs['pk2'])
         context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
-        context['categories_current'] = [cat.pk for cat in context['implem1'].algo.category.all()] + \
-            [cat.pk for cat in context['implem2'].algo.category.all()]
+        context['categories_current'] = Algo.objects.filter(Q(pk=context['implem1'].algo_id) | Q(pk=context['implem2'].algo_id)).values_list('pk', flat=True)
         context['title'] += " - implementation - diff"
         return context
 
@@ -144,7 +142,7 @@ class ImplementationEdit(UpdateView):
         context = super(ImplementationEdit, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['algo'] = self.get_object().algo
-        context['categories_current'] = [cat.pk for cat in context['algo'].category.all()]
+        context['categories_current'] = context['algo'].category.values_list('pk', flat=True)
         context['title'] += " - implementation - edit"
         return context
 
