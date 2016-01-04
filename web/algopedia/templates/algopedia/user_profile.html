@@ -21,7 +21,7 @@
 
 <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-    <li role="presentation"><a href="#implementations" aria-controls="implementations" role="tab" data-toggle="tab">Implementation</a></li>
+    <li role="presentation"><a href="#implementations" aria-controls="implementations" role="tab" data-toggle="tab">Implementations</a></li>
     <li role="presentation"><a href="#stars" aria-controls="stars" role="tab" data-toggle="tab">Stars</a></li>
 </ul>
 
@@ -62,7 +62,7 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="3" style="text-align: center">You have not submitted any code !</td>
+                    <td colspan="6" style="text-align: center">You have not submitted any code !</td>
                 </tr>
             {% endfor %}
         </table>
@@ -73,11 +73,12 @@
         <h5>Starred implementations:</h5>
         <table class="table table-striped">
             <tr>
-                <th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
+                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
             </tr>
             {% for star in stars_active %}
             {% with star.implementation as implem %}
                 <tr>
+                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
                     <td>{{ implem.lang.name }}</td>
                     <td>{{ implem.user }}</td>
                     <td>
@@ -103,19 +104,20 @@
             {% endwith %}
             {% empty %}
                  <tr>
-                     <td colspan="4" style="text-align: center">You don't have any starred implementation yet.</td>
+                     <td colspan="5" style="text-align: center">You don't have any starred implementation yet.</td>
                  </tr>
             {% endfor %}
         </table>
 
-        <h5>Old starred implementations:</h5>
+        <h5>Previously starred implementations:</h5>
         <table class="table table-striped ">
             <tr>
-                <th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
+                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
             </tr>
             {% for star in stars_old %}
             {% with star.implementation as implem %}
                 <tr>
+                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
                     <td>{{ implem.lang.name }}</td>
                     <td>{{ implem.user }}</td>
                     <td>
@@ -141,7 +143,7 @@
             {% endwith %}
             {% empty %}
                  <tr>
-                     <td colspan="4" style="text-align: center">You don't have any starred implementation yet.</td>
+                     <td colspan="5" style="text-align: center">You don't have any previously starred implementation yet.</td>
                  </tr>
             {% endfor %}
         </table>
