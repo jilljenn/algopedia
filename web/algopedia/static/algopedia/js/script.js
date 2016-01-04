@@ -18,7 +18,7 @@ $('#modal_implementation_detail').on('show.bs.modal', function (event) {
 })
 
 // back button and hashes
-function history(hash) {
+function pushHistory(hash) {
   if(history.pushState)
     history.pushState({}, document.title, '#'+hash);
   else
@@ -26,22 +26,22 @@ function history(hash) {
 }
 // modal
 $('div.modal').on('show.bs.modal', function() {
-  history('mod_'+this.id);
+  pushHistory('mod_'+this.id);
 });
 // tab
 $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-  history('tab_'+$(e.target).attr('href').substr(1))
+  pushHistory('tab_'+$(e.target).attr('href').substr(1))
 });
 // on hash change
 window.onhashchange = function() {
   if(location.hash.substr(1, 3) == 'tab') {
     $('a[href="#' + location.hash.substr(5) + '"]').tab('show')
-    $('.modal').modal('hide');
+    $('div.modal').modal('hide');
   }
   else if(location.hash.substr(1, 3) == 'mod')
     ;// $('#' + location.hash.substr(5)).modal('show')
   else {
-    $('.modal').modal('hide');
+    $('div.modal').modal('hide');
     $('.tab-first').tab('show');
   }
 }
