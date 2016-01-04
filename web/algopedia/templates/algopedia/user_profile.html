@@ -58,7 +58,7 @@
                     {% else %}
                         <span class="glyphion glyphicon-remove"></span>
                     {% endif %}
-                    <td><input type="checkbox" name="star_{{ implem.pk }}" {% if implem.pk in stars %}checked="checked" {% endif %}/></td>
+                    <td><input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" {% if implem.pk in stars %}checked="checked" {% endif %}/></td>
                 </tr>
             {% empty %}
                 <tr>
@@ -98,7 +98,7 @@
                         </a>
                     </td>
                     {% if user.is_authenticated %}
-                        <td><input type="checkbox" name="star_{{ implem.pk }}" checked="checked" /></td>
+                        <td><input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" checked="checked" /></td>
                     {% endif %}
                 </tr>
             {% endwith %}
@@ -137,7 +137,7 @@
                         </a>
                     </td>
                     {% if user.is_authenticated %}
-                        <td><input type="checkbox" name="star_{{ implem.pk }}" /></td>
+                        <td><input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" /></td>
                     {% endif %}
                 </tr>
             {% endwith %}

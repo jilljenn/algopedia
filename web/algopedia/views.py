@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
+from django.http import JsonResponse
 from django.db import transaction
 from django.db.models import Count, Q
 from algopedia.models import Algo, Implementation, Category, Star
-from django.views.generic import TemplateView
+from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from difflib import HtmlDiff
@@ -36,7 +38,7 @@ class AlgoDetail(DetailView):
         context['categories_current'] = context['object'].category.values_list('pk', flat=True)
         context['title'] += " - algo - " + context['object'].name
         if self.request.user.is_authenticated():
-            context['stars'] = [star.implementation_id for star in Star.objects.filter(user=self.request.user).filter(implementation__algo__pk=context['object'].pk)]
+            context['stars'] = [star.implementation_id for star in Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True)]
         return context
 
 
@@ -113,13 +115,30 @@ class ImplementationDetail(DetailView):
         context['title'] += " - implementation - detail"
         context['categories_current'] = context['object'].algo.category.values_list('pk', flat=True)
         if self.request.user.is_authenticated():
-            context['starred'] = Star.objects.filter(implementation__pk=context['object'].pk).filter(user=self.request.user).exists()
+            context['starred'] = Star.objects.filter(implementation_id=context['object'].pk, user=self.request.user, active=True).exists()
         return context
 
 
-def ajaxImplementationDetail(request, pk):
-    context = {'object' : get_object_or_404(Implementation, pk=pk)}
-    return render(request, 'algopedia/ajax_implementation_detail.html', context)
+class AjaxImplementationDetail(View):
+    def get(self, request, *args, **kwargs):
+        context = {'object' : get_object_or_404(Implementation, pk=kwargs['pk'])}
+        if self.request.user.is_authenticated():
+            context['starred'] = Star.objects.filter(implementation_id=kwargs['pk'], user=self.request.user, active=True).exists()
+        return render(request, 'algopedia/ajax_implementation_detail.html', context)
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class AjaxStar(View):
+    def get(self, request, *args, **kwargs):
+        implem = get_object_or_404(Implementation, pk=kwargs['pk'])
+        if kwargs['action'] == 'add':
+            Star.objects.update_or_create(defaults={'active':True}, implementation=implem, user=request.user)
+            return JsonResponse({'status':'ok'})
+        else:
+            star = get_object_or_404(Star, implementation=implem, user=request.user)
+            star.active = False
+            star.save()
+            return JsonResponse({'status':'ok'})
 
 class ImplementationDiff(TemplateView):
     template_name = "algopedia/implementation_diff.html"
@@ -129,6 +148,9 @@ class ImplementationDiff(TemplateView):
         context = populate_context(context)
         context['implem1'] = get_object_or_404(Implementation, pk=kwargs['pk1'])
         context['implem2'] = get_object_or_404(Implementation, pk=kwargs['pk2'])
+        if self.request.user.is_authenticated():
+            context['starred1'] = Star.objects.filter(implementation_id=kwargs['pk1'], user=self.request.user, active=True).exists()
+            context['starred2'] = Star.objects.filter(implementation_id=kwargs['pk2'], user=self.request.user, active=True).exists()
         context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
         context['categories_current'] = Algo.objects.filter(Q(pk=context['implem1'].algo_id) | Q(pk=context['implem2'].algo_id)).values_list('pk', flat=True)
         context['title'] += " - implementation - diff"
@@ -153,7 +175,7 @@ class ImplementationEdit(UpdateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         parent = get_object_or_404(Implementation, pk=form.instance.pk)
-        if(parent.user == self.request.user): # hide old implementation
+        if(parent.user == self.request.user): # hide old implementation # TODO prévenir les gens qui ont forké ou starré le code qu'il y a une maj
             parent.visible = False
             parent.save()
         form.instance.parent = parent

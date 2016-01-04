@@ -66,3 +66,6 @@ class Star(models.Model):
 
     def __str__(self):
         return str(self.user) + " stars " + str(self.implementation)
+
+    class Meta:
+        unique_together = ('user', 'implementation')

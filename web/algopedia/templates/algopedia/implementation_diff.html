@@ -8,13 +8,17 @@
     <div class="col-sm-6">
         <h5>From</h5>
         {% with implem1 as implem %}
+        {% with starred1 as starred %}
             {% include 'algopedia/implementation_descr.html' %}
+        {% endwith %}
         {% endwith %}
     </div>
     <div class="col-sm-6">
         <h5>To</h5>
         {% with implem2 as implem %}
+        {% with starred2 as starred %}
             {% include 'algopedia/implementation_descr.html' %}
+        {% endwith %}
         {% endwith %}
     </div>
 </div>

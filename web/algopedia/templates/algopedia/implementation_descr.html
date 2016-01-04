@@ -10,7 +10,7 @@
         </li>
     {% endif %}
     {% if user.is_authenticated %}
-        {#<li>Starred: <input type="checkbox" {% if implem.starred %}checked="checked" {% endif %}</li> TODO use annotate #}
+        <li>Starred: <input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" {% if starred %}checked="checked" {% endif %}/></li>
     {% endif %}
     <li>
         <a href="{% url 'algopedia:implementation-edit' implem.pk %}" class="btn btn-xs btn-default">

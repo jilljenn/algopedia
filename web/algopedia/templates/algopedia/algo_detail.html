@@ -64,7 +64,7 @@
                 </a>
             </td>
             {% if user.is_authenticated %}
-                <td><input type="checkbox" name="star_{{ implem.pk }}" {% if implem.pk in stars %}checked="checked" {% endif %}/></td>
+                <td><input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" {% if implem.pk in stars %}checked="checked" {% endif %}/></td>
             {% endif %}
         </tr>
     {% empty %}

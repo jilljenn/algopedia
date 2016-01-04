@@ -16,5 +16,6 @@ urlpatterns = [
 
     url(r'^user/profile/', views.UserProfile.as_view(), name='user-profile'),
 
-    url(r'^ajax/implementation/(?P<pk>\d+)', views.ajaxImplementationDetail),
+    url(r'^ajax/implementation/(?P<pk>\d+)', views.AjaxImplementationDetail.as_view()),
+    url(r'^ajax/star/(?P<action>add|remove)/(?P<pk>\d+)', views.AjaxStar.as_view()),
 ]
