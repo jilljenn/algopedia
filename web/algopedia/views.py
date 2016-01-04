@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
+from django.db import transaction
 from django.db.models import Count, Q
 from algopedia.models import Algo, Implementation, Category, Star
 from django.views.generic import TemplateView
@@ -147,9 +148,15 @@ class ImplementationEdit(UpdateView):
         context['title'] += " - implementation - edit"
         return context
 
+    # atomic : the parent is hid and the child is created simultaeneously
+    @transaction.atomic
     def form_valid(self, form):
         form.instance.user = self.request.user
-        form.instance.parent = get_object_or_404(Implementation, pk=form.instance.pk)
+        parent = get_object_or_404(Implementation, pk=form.instance.pk)
+        if(parent.user == self.request.user): # hide old implementation
+            parent.visible = False
+            parent.save()
+        form.instance.parent = parent
         form.instance.pk = None # create a new row
         return super(ImplementationEdit, self).form_valid(form)
 
