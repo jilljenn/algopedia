@@ -43,7 +43,7 @@
             <th>Stars</th>
         {% endif %}
     </tr>
-    {% for implem in object.implementation_set.all|dictsort:"lang.name" %}
+    {% for implem in implementations %}
         <tr>
             <td>{{ implem.lang.name }}</td>
             <td>{{ implem.user }}</td>

@@ -31,6 +31,7 @@ class AlgoDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AlgoDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
+        context['implementations'] = Implementation.objects.filter(algo=self.kwargs['pk']).filter(visible=True).order_by('lang__name')
         context['categories_current'] = context['object'].category.values_list('pk', flat=True)
         context['title'] += " - algo - " + context['object'].name
         if self.request.user.is_authenticated():

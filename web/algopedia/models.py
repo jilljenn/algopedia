@@ -31,6 +31,7 @@ class Implementation(models.Model):
     code = models.TextField()
     lang = models.ForeignKey('Language')
     parent = models.ForeignKey('Implementation', blank=True, null=True)
+    visible = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
