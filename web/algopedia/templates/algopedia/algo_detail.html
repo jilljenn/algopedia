@@ -22,20 +22,7 @@
 <p>
     <a href="{% url 'algopedia:implementation-create' object.pk %}" class="btn btn-default">Add mine</a>
 </p>
-<div class="modal fade" id="modal_implementation_detail" tabindex="-1" role="dialog" aria-labelledby="modal_implementation_detail">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h6 class="modal-title" id="modal_implementation_detail_label">{{ object.name }}
-                    in <span class="modal-title-lang"></span>
-                    by <span class="modal-title-user"></span>
-                </h6>
-            </div>
-            <div class="modal-body"></div>
-        </div>
-    </div>
-</div>
+{% include 'algopedia/implementation_modal.html' %}
 <table class="table table-striped ">
     <tr>
         <th>Language</th><th>Author</th><th>Actions</th>
