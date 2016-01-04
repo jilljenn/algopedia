@@ -17,19 +17,39 @@ $('#modal_implementation_detail').on('show.bs.modal', function (event) {
 
 })
 
-// back button close an opened modal https://gist.github.com/thedamon/9276193
+// back button and hashes
+function history(hash) {
+  if(history.pushState)
+    history.pushState({}, document.title, '#'+hash);
+  else
+    location.hash = hash;
+}
+// modal
 $('div.modal').on('show.bs.modal', function() {
-  var modal = this;
-  window.location.hash = modal.id;
-  window.onhashchange = function() {
-    if (!location.hash)
-      $(modal).modal('hide');
+  history('mod_'+this.id);
+});
+// tab
+$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+  history('tab_'+$(e.target).attr('href').substr(1))
+});
+// on hash change
+window.onhashchange = function() {
+  if(location.hash.substr(1, 3) == 'tab') {
+    $('a[href="#' + location.hash.substr(5) + '"]').tab('show')
+    $('.modal').modal('hide');
   }
-});
-$('div.modal').on('hide.bs.modal', function() {
-  history.pushState('', document.title, window.location.pathname);
-});
+  else if(location.hash.substr(1, 3) == 'mod')
+    ;// $('#' + location.hash.substr(5)).modal('show')
+  else {
+    $('.modal').modal('hide');
+    $('.tab-first').tab('show');
+  }
+}
+// at load
+if (location.hash !== '')
+  window.onhashchange()
 
+// called at load and after a modal loading
 function init() {
   // star checkboxes
   $("input:checkbox.checkbox_star").change(function() {
