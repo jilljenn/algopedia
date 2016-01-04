@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^implementation/diff/(?P<pk1>\d+)/(?P<pk2>\d+)', views.ImplementationDiff.as_view(), name="implementation-diff"),
     url(r'^implementation/edit/(?P<pk>\d+)', views.ImplementationEdit.as_view(), name='implementation-edit'),
 
-    url(r'^user/stars/', views.UserStars.as_view(), name='user-stars'),
+    url(r'^user/profile/', views.UserProfile.as_view(), name='user-profile'),
 
     url(r'^ajax/implementation/(?P<pk>\d+)', views.ajaxImplementationDetail),
 ]

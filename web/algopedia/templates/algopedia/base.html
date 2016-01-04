@@ -28,7 +28,7 @@
 <body>
 {% url 'algopedia:algo-list' as url_algo_list %}
 {% url 'algopedia:category-list' as url_category_list %}
-{% url 'algopedia:user-stars' as url_user_stars %}
+{% url 'algopedia:user-profile' as url_user_profile %}
 <header>
     <nav class="navbar navbar-ct-danger navbar-static-top">
         <div class="container">
@@ -55,7 +55,7 @@
                     <ul class="nav navbar-nav navbar-right">
                     {% if request.user.is_authenticated %}
                         <li{% if request.path = url_user_stars %} class="active"{% endif %}>
-                            <a href="{% url 'algopedia:user-stars' %}">Stars</a>
+                            <a href="{% url 'algopedia:user-profile' %}">Profile</a>
                         </li>
                         <li><a href="{% url 'account_logout' %}">Logout ({{ request.user.username }})</a></li>
                     {% else %}

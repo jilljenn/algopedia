@@ -1,0 +1,151 @@
+{% extends "algopedia/base.html" %}
+{% block content %}
+
+<div class="container">
+
+<div class="modal fade" id="modal_implementation_detail" tabindex="-1" role="dialog" aria-labelledby="modal_implementation_detail">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h6 class="modal-title" id="modal_implementation_detail_label">{{ object.name }}
+                    in <span class="modal-title-lang"></span>
+                    by <span class="modal-title-user"></span>
+                </h6>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+    <li role="presentation"><a href="#implementations" aria-controls="implementations" role="tab" data-toggle="tab">Implementation</a></li>
+    <li role="presentation"><a href="#stars" aria-controls="stars" role="tab" data-toggle="tab">Stars</a></li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade active in" id="home">...</div>
+    <div role="tabpanel" class="tab-pane fade" id="implementations">
+
+
+        <h5>My implementations:</h5>
+        <table class="table table-striped ">
+            <tr>
+                <th>Algo</th><th>Language</th><th>Actions</th><th>Date</th><th>Visible</th><th>Stars</th>
+            </tr>
+            {% for implem in implementations %}
+                <tr>
+                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
+                    <td>{{ implem.lang.name }}</td>
+                    <td>
+                        <a href="{% url 'algopedia:implementation-detail' implem.pk %}" class="implementation-detail-link"
+                    data-remote="false"
+                    data-implementation-id="{{ implem.pk }}"
+                    data-implementation-user="{{ implem.user }}"
+                    data-implementation-lang="{{ implem.lang }}"
+                    data-toggle="modal" data-target="#modal_implementation_detail">See <span class="glyphicon glyphicon-search"></span></a>
+                        <a href="{% url 'algopedia:implementation-detail' implem.pk %}" > | More <span class="glyphicon glyphicon-zoom-in"></span></a>
+                        <a href="{% url 'algopedia:implementation-edit' implem.pk %}">
+                             | Edit <span class="glyphicon glyphicon-wrench"></span>
+                        </a>
+                    </td>
+                    <td>{{ implem.date }}</td>
+                    <td>
+                    {% if implem.visible %}
+                        <span class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                        <span class="glyphion glyphicon-remove"></span>
+                    {% endif %}
+                    <td><input type="checkbox" name="star_{{ implem.pk }}" {% if implem.pk in stars %}checked="checked" {% endif %}/></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" style="text-align: center">You have not submitted any code !</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="stars">
+
+        <h5>Starred implementations:</h5>
+        <table class="table table-striped">
+            <tr>
+                <th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
+            </tr>
+            {% for star in stars_active %}
+            {% with star.implementation as implem %}
+                <tr>
+                    <td>{{ implem.lang.name }}</td>
+                    <td>{{ implem.user }}</td>
+                    <td>
+                        <a href="{% url 'algopedia:implementation-detail' implem.pk %}" class="implementation-detail-link"
+                    data-remote="false"
+                    data-implementation-id="{{ implem.pk }}"
+                    data-implementation-user="{{ implem.user }}"
+                    data-implementation-lang="{{ implem.lang }}"
+                    data-toggle="modal" data-target="#modal_implementation_detail">See <span class="glyphicon glyphicon-search"></span></a>
+                        <a href="{% url 'algopedia:implementation-detail' implem.pk %}" > | More <span class="glyphicon glyphicon-zoom-in"></span></a>
+                        <a href="{% url 'algopedia:implementation-edit' implem.pk %}">
+                        {% if implem.user.pk = user.pk %}
+                             | Edit <span class="glyphicon glyphicon-wrench"></span>
+                        {% else %}
+                             | Fork <span class="glyphicon glyphicon-random"></span>
+                        {% endif %}
+                        </a>
+                    </td>
+                    {% if user.is_authenticated %}
+                        <td><input type="checkbox" name="star_{{ implem.pk }}" checked="checked" /></td>
+                    {% endif %}
+                </tr>
+            {% endwith %}
+            {% empty %}
+                 <tr>
+                     <td colspan="4" style="text-align: center">You don't have any starred implementation yet.</td>
+                 </tr>
+            {% endfor %}
+        </table>
+
+        <h5>Old starred implementations:</h5>
+        <table class="table table-striped ">
+            <tr>
+                <th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
+            </tr>
+            {% for star in stars_old %}
+            {% with star.implementation as implem %}
+                <tr>
+                    <td>{{ implem.lang.name }}</td>
+                    <td>{{ implem.user }}</td>
+                    <td>
+                        <a href="{% url 'algopedia:implementation-detail' implem.pk %}" class="implementation-detail-link"
+                    data-remote="false"
+                    data-implementation-id="{{ implem.pk }}"
+                    data-implementation-user="{{ implem.user }}"
+                    data-implementation-lang="{{ implem.lang }}"
+                    data-toggle="modal" data-target="#modal_implementation_detail">See <span class="glyphicon glyphicon-search"></span></a>
+                        <a href="{% url 'algopedia:implementation-detail' implem.pk %}" > | More <span class="glyphicon glyphicon-zoom-in"></span></a>
+                        <a href="{% url 'algopedia:implementation-edit' implem.pk %}">
+                        {% if implem.user.pk = user.pk %}
+                             | Edit <span class="glyphicon glyphicon-wrench"></span>
+                        {% else %}
+                             | Fork <span class="glyphicon glyphicon-random"></span>
+                        {% endif %}
+                        </a>
+                    </td>
+                    {% if user.is_authenticated %}
+                        <td><input type="checkbox" name="star_{{ implem.pk }}" /></td>
+                    {% endif %}
+                </tr>
+            {% endwith %}
+            {% empty %}
+                 <tr>
+                     <td colspan="4" style="text-align: center">You don't have any starred implementation yet.</td>
+                 </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}

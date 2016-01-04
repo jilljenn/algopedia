@@ -162,16 +162,22 @@ class ImplementationEdit(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class UserStars(TemplateView):
-    template_name = "algopedia/user_stars.html"
+class UserProfile(TemplateView):
+    template_name = "algopedia/user_profile.html"
 
     def get_context_data(self, **kwargs):
-        context = super(UserStars, self).get_context_data(**kwargs)
+        context = super(UserProfile, self).get_context_data(**kwargs)
         context = populate_context(context)
-        context['title'] += " - stars"
+        context['title'] += " - profile"
+
+        # stars
         req = Star.objects.filter(user=self.request.user)
-        context['stars'] = req.filter(active=True)
+        context['stars_active'] = req.filter(active=True)
         context['stars_old'] = req.filter(active=False)
+
+        # implementations
+        context['implementations'] = Implementation.objects.filter(user=self.request.user).order_by('algo__name')
+        context['stars'] = [star.implementation_id for star in context['stars_active']]
         return context
 
 class Index(TemplateView):
