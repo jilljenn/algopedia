@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^implementation/edit/(?P<pk>\d+)', views.ImplementationEdit.as_view(), name='implementation-edit'),
 
     url(r'^user/profile/', views.UserProfile.as_view(), name='user-profile'),
+    url(r'^user/notebook/(?P<format>pdf|tex)/', views.Notebook.as_view(), name='user-notebook'),
 
     url(r'^ajax/implementation/(?P<pk>\d+)', views.AjaxImplementationDetail.as_view()),
     url(r'^ajax/star/(?P<action>add|remove)/(?P<pk>\d+)', views.AjaxStar.as_view()),

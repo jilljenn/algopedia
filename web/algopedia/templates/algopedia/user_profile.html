@@ -7,6 +7,7 @@
     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" class="tab-first">Home</a></li>
     <li role="presentation"><a href="#implementations" aria-controls="implementations" role="tab" data-toggle="tab">Implementations</a></li>
     <li role="presentation"><a href="#stars" aria-controls="stars" role="tab" data-toggle="tab">Stars</a></li>
+    <li role="presentation"><a href="#notebook" aria-controls="stars" role="tab" data-toggle="tab">Notebook</a></li>
 </ul>
 
 <div class="tab-content">
@@ -131,6 +132,17 @@
                  </tr>
             {% endfor %}
         </table>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="notebook">
+        <div class="alert alert-info" role="alert">
+            <p>
+                To create your notebook with all your starred implementations, fill the form and choose the format.
+            </p>
+        </div>
+        <p>
+            <a href="{% url 'algopedia:user-notebook' 'pdf' %}" class="btn btn-sm btn-primary">PDF</a>
+            <a href="{% url 'algopedia:user-notebook' 'tex' %}" class="btn btn-sm btn-primary">TEX</a>
+        </p>
     </div>
 </div>
 </div>

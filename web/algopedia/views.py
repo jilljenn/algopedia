@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db import transaction
 from django.db.models import Count, Q
 from algopedia.models import Algo, Implementation, Category, Star
@@ -12,12 +12,12 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from difflib import HtmlDiff
+from algopedia.notebook import generateNotebook
 
 def populate_context(context):
     context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
     context['title'] = context.get('title', 'Algopedia')
     return context
-
 
 class AlgoList(ListView):
     model = Algo
@@ -210,3 +210,15 @@ class Index(TemplateView):
         context = populate_context(context)
         context['title'] += " - index"
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class Notebook(View):
+    def get(self, request, *args, **kwargs):
+        implementations = Star.objects.filter(user=self.request.user).filter(active=True).order_by('implementation__algo__name')
+        if kwargs['format'] == 'tex':
+            latex = generateNotebook(implementations)
+            return HttpResponse(latex)#, content_type="application/x-tex")
+        else:
+            return HttpResponse('Not implemented', status=501) #not implemented 

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
-from pygments.formatters import HtmlFormatter
+from pygments.formatters import HtmlFormatter, LatexFormatter
 from pygments.util import ClassNotFound
 from pygments.lexers.special import TextLexer
 
@@ -37,16 +37,20 @@ class Implementation(models.Model):
     def get_absolute_url(self):
         return reverse('algopedia:implementation-detail', kwargs={'pk': self.pk})
 
-    def get_code(self):
+    def get_lexer(self):
         try:
-            lexer = get_lexer_by_name(self.lang.name, stripall=True)
+            return get_lexer_by_name(self.lang.name, stripall=True)
         except ClassNotFound:
             try:
-                lexer = guess_lexer(self.code)
+                return guess_lexer(self.code)
             except ClassNotFound:
-                lexer = TextLexer()
-        formatter = HtmlFormatter(linenos=True)
-        return highlight(self.code, lexer, formatter)
+                return TextLexer()
+
+    def get_code(self):
+        return highlight(self.code, self.get_lexer(), HtmlFormatter(linenos=True))
+
+    def get_code_tex(self):
+        return highlight(self.code, self.get_lexer(), LatexFormatter(linenos=True)) #, envname='lstlisting'))
 
     def __str__(self):
         return str(self.algo) + " by " + str(self.user) + " in " + str(self.lang)
