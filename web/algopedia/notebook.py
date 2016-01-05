@@ -24,7 +24,6 @@ def generatePdf(implementations):
 
     # In a temporary folder, make temporary files
     tmp_folder = TemporaryDirectory()
-    os.chdir(tmp_folder.name)
     texfile, texfilename = mkstemp(dir=tmp_folder.name)
     pdffile, pdffilename = mkstemp()
     os.close(pdffile) # it will be overwritten by pdflatex
@@ -33,7 +32,7 @@ def generatePdf(implementations):
     os.close(texfile)
     # Compile the TeX file with PDFLaTeX
     for _ in range(3):
-        check_call(['pdflatex', '-no-shell-escape', '-halt-on-error', '-interaction', 'errorstopmode', texfilename]) # TODO environnement sécurisé
+        check_call(['pdflatex', '-output-directory', tmp_folder.name, '-no-shell-escape', '-halt-on-error', '-interaction', 'errorstopmode', texfilename]) # TODO environnement sécurisé
         # TODO catch CalledProcessError
     # Move resulting PDF
     os.rename(texfilename + '.pdf', pdffilename)
