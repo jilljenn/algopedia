@@ -98,3 +98,6 @@ td.diff_next {
 .alert h5{
     margin-bottom: 10px;
 }
+.panel-title a[role="button"] {
+  font-size: smaller;
+}
