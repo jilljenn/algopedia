@@ -221,7 +221,7 @@ class Notebook(View):
         implementations = Star.objects.filter(user=self.request.user).filter(active=True).order_by('implementation__algo__name')
         if kwargs['format'] == 'tex':
             latex = generateTex(implementations)
-            return HttpResponse(latex)#, content_type="application/x-tex")
+            return HttpResponse(latex, content_type="application/x-tex")
         else:
             pdffilename = generatePdf(implementations)
             pdffile = open(pdffilename, 'rb')
