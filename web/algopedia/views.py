@@ -12,7 +12,9 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from difflib import HtmlDiff
-from algopedia.notebook import generateNotebook
+from algopedia.notebook import generatePdf, generateTex
+import os
+from shutil import copyfileobj
 
 def populate_context(context):
     context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
@@ -218,7 +220,15 @@ class Notebook(View):
     def get(self, request, *args, **kwargs):
         implementations = Star.objects.filter(user=self.request.user).filter(active=True).order_by('implementation__algo__name')
         if kwargs['format'] == 'tex':
-            latex = generateNotebook(implementations)
+            latex = generateTex(implementations)
             return HttpResponse(latex)#, content_type="application/x-tex")
         else:
-            return HttpResponse('Not implemented', status=501) #not implemented 
+            pdffilename = generatePdf(implementations)
+            pdffile = open(pdffilename, 'rb')
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'inline; filename="notebook.pdf"'
+            copyfileobj(pdffile, response)
+            # delete pdf
+            pdffile.close()
+            os.remove(pdffilename)
+            return response
