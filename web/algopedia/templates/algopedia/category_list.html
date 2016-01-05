@@ -10,7 +10,7 @@
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="cat_heading_{{ object.pk }}">
             <h3 class="panel-title">
-              <a class="glyphicon glyphicon-plus" role="button" data-toggle="collapse" data-parent="#cat_accordion" href="#cat_collapse_{{ object.pk }}" aria-expanded="true" aria-controls="cat_collapse_{{ object.pk }}"></a>
+              <a class="glyphicon glyphicon-plus" role="button" data-toggle="collapse" href="#cat_collapse_{{ object.pk }}" aria-expanded="true" aria-controls="cat_collapse_{{ object.pk }}"></a>
               <a href="{% url 'algopedia:category-detail' object.pk %}">{{ object.name }}</a> ({{ object.num }})
             </h3>
         </div>
