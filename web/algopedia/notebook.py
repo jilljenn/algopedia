@@ -32,7 +32,7 @@ def generatePdf(implementations):
     os.close(texfile)
     # Compile the TeX file with PDFLaTeX
     for _ in range(3):
-        check_call(['pdflatex', '-output-directory', tmp_folder.name, '-no-shell-escape', '-halt-on-error', '-interaction', 'errorstopmode', texfilename]) # TODO environnement sécurisé
+        check_call(['pdflatex', '-output-directory', tmp_folder.name, '-no-shell-escape', '-halt-on-error', '-interaction', 'batchmode', texfilename]) # TODO environnement sécurisé
         # TODO catch CalledProcessError
     # Move resulting PDF
     os.rename(texfilename + '.pdf', pdffilename)
