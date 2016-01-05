@@ -1,0 +1,60 @@
+{% verbatim %}
+
+\documentclass[8pt]{extarticle}
+\usepackage{fancyvrb}
+%\usepackage{listings}
+\usepackage{multicol}
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper]{geometry}
+\geometry{
+  left=15mm,
+  right=7mm,
+  top=7mm,
+  bottom=15mm
+}
+%\usepackage{multicol}
+%\setlength{\columnsep}{1cm}
+%\def\@xobeysp{\mbox{}\space}
+
+{% endverbatim %}
+{{ style_defs|safe }}
+{% verbatim %}
+
+{% endverbatim %}
+\title{% templatetag openbrace %}{{ title }}{% templatetag closebrace %}
+\author{% templatetag openbrace %}{{ author }}{% templatetag closebrace %}
+{% verbatim %}
+\date\today
+
+\begin{document}
+
+\maketitle
+
+{% endverbatim %}
+{% if multicols > 1 %}
+\begin{% templatetag openbrace %}multicols{% templatetag closebrace %}
+{% templatetag openbrace %}{{ multicols }}{% templatetag closebrace %}
+\tableofcontents
+\end{% templatetag openbrace %}multicols{% templatetag closebrace %}
+{% else %}
+\tableofcontents
+{% endif %}
+
+
+{% if multicols > 1 %}
+\begin{% templatetag openbrace %}multicols{% templatetag closebrace %}
+{% templatetag openbrace %}{{ multicols }}{% templatetag closebrace %}
+{% endif %}
+
+
+{% for star in stars %}
+  \subsection{% templatetag openbrace %}{{ star.implementation.algo.name }}{% templatetag closebrace %}{# TODO injection latex #}
+  {{ star.implementation.get_code_tex|safe }}
+{% endfor %}
+
+{% if multicols > 1 %}
+\end{% templatetag openbrace %}multicols{% templatetag closebrace %}
+{% endif %}
+
+\end{document}
