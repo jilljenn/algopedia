@@ -1,3 +1,4 @@
+{% load algopedia_tags %}
 <ul>
     <li>Algorithm: <a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></li>
     <li>Author: {{ implem.user }}</li>
@@ -10,7 +11,7 @@
         </li>
     {% endif %}
     {% if user.is_authenticated %}
-        <li>Starred: <input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" {% if starred %}checked="checked" {% endif %}/></li>
+        <li>Starred: {% checkbox_star starred implem.pk %}</li>
     {% endif %}
     <li>
         <a href="{% url 'algopedia:implementation-edit' implem.pk %}" class="btn btn-xs btn-default">

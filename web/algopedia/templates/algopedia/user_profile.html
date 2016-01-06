@@ -1,4 +1,5 @@
 {% extends "algopedia/base.html" %}
+{% load algopedia_tags %}
 {% block content %}
 
 <div class="container">
@@ -43,7 +44,7 @@
                     {% else %}
                         <span class="glyphion glyphicon-remove"></span>
                     {% endif %}
-                    <td><input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" {% if implem.pk in stars %}checked="checked" {% endif %}/></td>
+                    <td>{% checkbox_star stars implem.pk %}</td>
                 </tr>
             {% empty %}
                 <tr>
@@ -82,9 +83,7 @@
                         {% endif %}
                         </a>
                     </td>
-                    {% if user.is_authenticated %}
-                        <td><input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" checked="checked" /></td>
-                    {% endif %}
+                    <td>{% checkbox_star True implem.pk %}</td>
                 </tr>
             {% endwith %}
             {% empty %}
@@ -121,9 +120,7 @@
                         {% endif %}
                         </a>
                     </td>
-                    {% if user.is_authenticated %}
-                        <td><input type="checkbox" class="checkbox_star" name="star_{{ implem.pk }}" /></td>
-                    {% endif %}
+                    <td>{% checkbox_star False implem.pk %}</td>
                 </tr>
             {% endwith %}
             {% empty %}

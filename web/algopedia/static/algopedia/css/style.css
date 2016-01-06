@@ -101,3 +101,30 @@ td.diff_next {
 .panel-title a[role="button"] {
   font-size: smaller;
 }
+/* checkboxes */
+/* :checked and :not(:checked) to be ignored by old browser */
+input[type="checkbox"]:not(:checked),
+input[type="checkbox"]:checked {
+  display: none;
+}
+input[type="checkbox"]:not(:checked)+label::after,
+input[type="checkbox"]:checked+label::after {
+  /* glyphicon */
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;content: '✔';
+}
+input[type="checkbox"]:checked+label::after {
+  /* glyphicon-star */
+  content: '\e006';
+}
+input[type="checkbox"]:not(:checked)+label::after {
+  /* glyphicon-star-empty */
+  content: '\e007';
+}
