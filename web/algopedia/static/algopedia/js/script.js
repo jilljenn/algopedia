@@ -51,6 +51,8 @@ if (location.hash !== '')
 
 // called at load and after a modal loading
 function init() {
+  // jsonly
+  $('.jsonly').removeClass('jsonly');
   // star checkboxes
   $("input:checkbox.checkbox_star").change(function() {
     id=parseInt($(this).attr('name').split('_')[1])

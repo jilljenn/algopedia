@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.db import transaction
@@ -121,26 +121,34 @@ class ImplementationDetail(DetailView):
         return context
 
 
-class AjaxImplementationDetail(View):
+class ImplementationDetailAjax(View):
     def get(self, request, *args, **kwargs):
         context = {'object' : get_object_or_404(Implementation, pk=kwargs['pk'])}
         if self.request.user.is_authenticated():
             context['starred'] = Star.objects.filter(implementation_id=kwargs['pk'], user=self.request.user, active=True).exists()
         return render(request, 'algopedia/ajax_implementation_detail.html', context)
 
+def starAddRemove(action, user, implementation_id):
+    implem = get_object_or_404(Implementation, pk=implementation_id)
+    if action == 'add':
+        Star.objects.update_or_create(defaults={'active':True}, implementation=implem, user=user)
+    else:
+        star = get_object_or_404(Star, implementation=implem, user=user)
+        star.active = False
+        star.save()
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(never_cache, name='dispatch')
-class AjaxStar(View):
+class StarAjax(View):
     def get(self, request, *args, **kwargs):
-        implem = get_object_or_404(Implementation, pk=kwargs['pk'])
-        if kwargs['action'] == 'add':
-            Star.objects.update_or_create(defaults={'active':True}, implementation=implem, user=request.user)
-            return JsonResponse({'status':'ok'})
-        else:
-            star = get_object_or_404(Star, implementation=implem, user=request.user)
-            star.active = False
-            star.save()
-            return JsonResponse({'status':'ok'})
+        starAddRemove(kwargs['action'], request.user, kwargs['pk'])
+        return JsonResponse({'status':'ok'})
+
+class StarRedirect(View):
+    def get(self, request, *args, **kwargs):
+        starAddRemove(kwargs['action'], request.user, kwargs['pk'])
+        return redirect(request.GET.get('next', '/'))
+
 
 class ImplementationDiff(TemplateView):
     template_name = "algopedia/implementation_diff.html"

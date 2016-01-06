@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^user/profile/', views.UserProfile.as_view(), name='user-profile'),
     url(r'^user/notebook/(?P<format>pdf|tex)/', views.Notebook.as_view(), name='user-notebook'),
 
-    url(r'^ajax/implementation/(?P<pk>\d+)', views.AjaxImplementationDetail.as_view()),
-    url(r'^ajax/star/(?P<action>add|remove)/(?P<pk>\d+)', views.AjaxStar.as_view()),
+    url(r'^ajax/implementation/(?P<pk>\d+)', views.ImplementationDetailAjax.as_view()),
+    url(r'^ajax/star/(?P<action>add|remove)/(?P<pk>\d+)', views.StarAjax.as_view()),
+    url(r'^star/(?P<action>add|remove)/(?P<pk>\d+)', views.StarRedirect.as_view(), name='star-redirect'),
 ]

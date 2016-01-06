@@ -128,3 +128,6 @@ input[type="checkbox"]:not(:checked)+label::after {
   /* glyphicon-star-empty */
   content: '\e007';
 }
+.jsonly { /* to be deleted in javascript */
+  display: none;
+}
