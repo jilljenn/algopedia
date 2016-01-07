@@ -3,13 +3,19 @@
 {% block content %}
 
 <div class="container">
+
+<div class="profile-tabs">
+  <div class="nav-tabs-navigation">
 {% include 'algopedia/implementation_modal.html' %}
-<ul class="nav nav-tabs" role="tablist">
+    <div class="nav-tabs-wrapper">
+      <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" class="tab-first">Home</a></li>
     <li role="presentation"><a href="#implementations" aria-controls="implementations" role="tab" data-toggle="tab">Implementations</a></li>
     <li role="presentation"><a href="#stars" aria-controls="stars" role="tab" data-toggle="tab">Stars</a></li>
     <li role="presentation"><a href="#notebook" aria-controls="stars" role="tab" data-toggle="tab">Notebook</a></li>
-</ul>
+      </ul>
+    </div>
+  </div>
 
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade active in" id="home">...</div>
