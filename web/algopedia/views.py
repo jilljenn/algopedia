@@ -231,7 +231,11 @@ class NotebookParams(UpdateView):
 
     def get_object(self, queryset=None):
         """Create a new row if it does not exist"""
-        obj, created = Notebook.objects.get_or_create(user=self.request.user)
+        # we do not use get_or_create because it commit the new object to the DB
+        try:
+          obj = Notebook.objects.get(user=self.request.user)
+        except Notebook.DoesNotExist:
+          obj = Notebook(user=self.request.user)
         return obj
 
     def get_success_url(self):
