@@ -1,3 +1,4 @@
+{% load algopedia_filters %}
 {% verbatim %}
 
 \documentclass[8pt]{extarticle}
@@ -22,8 +23,8 @@
 {% verbatim %}
 
 {% endverbatim %}
-\title{% templatetag openbrace %}{{ title }}{% templatetag closebrace %}
-\author{% templatetag openbrace %}{{ author }}{% templatetag closebrace %}
+\title{% templatetag openbrace %}{{ title|latex_escape|safe }}{% templatetag closebrace %}
+\author{% templatetag openbrace %}{{ author|latex_escape|safe }}{% templatetag closebrace %}
 {% verbatim %}
 \date\today
 
@@ -49,7 +50,7 @@
 
 
 {% for star in stars %}
-  \subsection{% templatetag openbrace %}{{ star.implementation.algo.name }}{% templatetag closebrace %}{# TODO injection latex #}
+  \subsection{% templatetag openbrace %}{{ star.implementation.algo.name|latex_escape|safe }}{% templatetag closebrace %}
   {% if linenos %}
     {{ star.implementation.get_code_tex_linenos|safe }}
   {% else %}
