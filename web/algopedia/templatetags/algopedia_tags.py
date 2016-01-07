@@ -14,3 +14,12 @@ def checkbox_star(context, stars, id):
       'stars' : stars,
       'id' : id
     }
+
+@register.inclusion_tag('algopedia/tag_implementation_descr.html', takes_context=True)
+def implementation_descr(context, implem, stars):
+    return {
+      'request' : context['request'],
+      'user' : context['user'],
+      'implem' : implem,
+      'stars' : stars,
+    }

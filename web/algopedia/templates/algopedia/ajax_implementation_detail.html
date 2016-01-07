@@ -1,8 +1,7 @@
+{% load algopedia_tags %}
 <h5>Meta</h5>
 
-{% with object as implem %}
-    {% include 'algopedia/implementation_descr.html' %}
-{% endwith %}
+{% implementation_descr object starred %}
 
 <hr>
 

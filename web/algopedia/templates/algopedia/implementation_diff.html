@@ -1,4 +1,5 @@
 {% extends "algopedia/base.html" %}
+{% load algopedia_tags %}
 {% block content %}
 
 <div class="container">
@@ -7,19 +8,11 @@
 <div class="container">
     <div class="col-sm-6">
         <h5>From</h5>
-        {% with implem1 as implem %}
-        {% with starred1 as starred %}
-            {% include 'algopedia/implementation_descr.html' %}
-        {% endwith %}
-        {% endwith %}
+        {% implementation_descr implem1 starred1 %}
     </div>
     <div class="col-sm-6">
         <h5>To</h5>
-        {% with implem2 as implem %}
-        {% with starred2 as starred %}
-            {% include 'algopedia/implementation_descr.html' %}
-        {% endwith %}
-        {% endwith %}
+        {% implementation_descr implem2 starred2 %}
     </div>
 </div>
 
