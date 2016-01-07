@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.db import transaction
 from django.db.models import Count, Q
-from algopedia.models import Algo, Implementation, Category, Star
+from algopedia.models import Algo, Implementation, Category, Star, Notebook
 from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -210,7 +210,9 @@ class UserProfile(TemplateView):
         # implementations
         context['implementations'] = Implementation.objects.filter(user=self.request.user).order_by('algo__name')
         context['stars'] = [star.implementation_id for star in context['stars_active']]
+
         return context
+
 
 class Index(TemplateView):
     template_name = "algopedia/index.html"
@@ -223,15 +225,34 @@ class Index(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class NotebookParams(UpdateView):
+    model = Notebook
+    fields = ['title', 'author', 'linenos', 'multicol']
+
+    def get_object(self, queryset=None):
+        """Create a new row if it does not exist"""
+        obj, created = Notebook.objects.get_or_create(user=self.request.user)
+        return obj
+
+    def get_success_url(self):
+        if 'pdf' in self.request.POST:
+            return reverse('algopedia:user-notebook-gen', kwargs={'format':'pdf'})
+        elif 'tex' in self.request.POST:
+            return reverse('algopedia:user-notebook-gen', kwargs={'format':'tex'})
+        return reverse('algopedia:user-notebook')
+
+
+@method_decorator(login_required, name='dispatch')
 @method_decorator(never_cache, name='dispatch')
-class Notebook(View):
+class NotebookGen(View):
     def get(self, request, *args, **kwargs):
+        params = get_object_or_404(Notebook, user=self.request.user)
         implementations = Star.objects.filter(user=self.request.user).filter(active=True).order_by('implementation__algo__name')
         if kwargs['format'] == 'tex':
-            latex = generateTex(implementations)
+            latex = generateTex(implementations, params)
             return HttpResponse(latex, content_type="application/x-tex")
-        else:
-            pdffilename = generatePdf(implementations)
+        else: # pdf
+            pdffilename = generatePdf(implementations, params)
             pdffile = open(pdffilename, 'rb')
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'inline; filename="notebook.pdf"'

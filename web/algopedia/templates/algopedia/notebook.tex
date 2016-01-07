@@ -50,7 +50,11 @@
 
 {% for star in stars %}
   \subsection{% templatetag openbrace %}{{ star.implementation.algo.name }}{% templatetag closebrace %}{# TODO injection latex #}
-  {{ star.implementation.get_code_tex|safe }}
+  {% if linenos %}
+    {{ star.implementation.get_code_tex_linenos|safe }}
+  {% else %}
+    {{ star.implementation.get_code_tex|safe }}
+  {% endif %}
 {% endfor %}
 
 {% if multicols > 1 %}

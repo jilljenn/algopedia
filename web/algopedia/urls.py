@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from django.views.generic.base import RedirectView
 from . import views
 
 urlpatterns = [
@@ -15,7 +14,8 @@ urlpatterns = [
     url(r'^implementation/edit/(?P<pk>\d+)', views.ImplementationEdit.as_view(), name='implementation-edit'),
 
     url(r'^user/profile/', views.UserProfile.as_view(), name='user-profile'),
-    url(r'^user/notebook/(?P<format>pdf|tex)/', views.Notebook.as_view(), name='user-notebook'),
+    url(r'^user/notebook/$', views.NotebookParams.as_view(), name='user-notebook'),
+    url(r'^user/notebook/(?P<format>pdf|tex)/', views.NotebookGen.as_view(), name='user-notebook-gen'),
 
     url(r'^ajax/implementation/(?P<pk>\d+)', views.ImplementationDetailAjax.as_view()),
     url(r'^ajax/star/(?P<action>add|remove)/(?P<pk>\d+)', views.StarAjax.as_view()),

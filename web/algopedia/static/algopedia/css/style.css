@@ -103,12 +103,12 @@ td.diff_next {
 }
 /* checkboxes */
 /* :checked and :not(:checked) to be ignored by old browser */
-input[type="checkbox"]:not(:checked),
-input[type="checkbox"]:checked {
+input[type="checkbox"].checkbox_star:not(:checked),
+input[type="checkbox"].checkbox_star:checked {
   display: none;
 }
-input[type="checkbox"]:not(:checked)+label::after,
-input[type="checkbox"]:checked+label::after {
+input[type="checkbox"].checkbox_star:not(:checked)+label::after,
+input[type="checkbox"].checkbox_star:checked+label::after {
   /* glyphicon */
   position: relative;
   top: 1px;
@@ -120,11 +120,11 @@ input[type="checkbox"]:checked+label::after {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;content: '✔';
 }
-input[type="checkbox"]:checked+label::after {
+input[type="checkbox"].checkbox_star:checked+label::after {
   /* glyphicon-star */
   content: '\e006';
 }
-input[type="checkbox"]:not(:checked)+label::after {
+input[type="checkbox"].checkbox_star:not(:checked)+label::after {
   /* glyphicon-star-empty */
   content: '\e007';
 }

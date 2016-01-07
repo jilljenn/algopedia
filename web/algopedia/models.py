@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter, LatexFormatter
@@ -49,8 +50,11 @@ class Implementation(models.Model):
     def get_code(self):
         return highlight(self.code, self.get_lexer(), HtmlFormatter(linenos=True))
 
-    def get_code_tex(self):
+    def get_code_tex_linenos(self):
         return highlight(self.code, self.get_lexer(), LatexFormatter(linenos=True)) #, envname='lstlisting'))
+
+    def get_code_tex(self):
+        return highlight(self.code, self.get_lexer(), LatexFormatter(linenos=False)) #, envname='lstlisting'))
 
     def __str__(self):
         return str(self.algo) + " by " + str(self.user) + " in " + str(self.lang)
@@ -73,3 +77,20 @@ class Star(models.Model):
 
     class Meta:
         unique_together = ('user', 'implementation')
+
+
+class Notebook(models.Model):
+    """Parameters for notebook generation"""
+    user = models.OneToOneField(User)
+    title = models.CharField(max_length=256, default="Notebook")
+    author = models.CharField(max_length=256, blank=True)
+    linenos = models.BooleanField(default=True)
+    multicol = models.IntegerField(
+        default=1,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(4)
+        ])
+
+    def __str__(self):
+        return "Notebook of " + str(self.user)

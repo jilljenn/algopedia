@@ -1,0 +1,20 @@
+{% extends "algopedia/base.html" %}
+{% block content %}
+<div class="container">
+
+        <div class="alert alert-info" role="alert">
+            <p>
+                To create your notebook with all your starred implementations, fill the form and choose the format.
+            </p>
+        </div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Save" class="btn btn-sm btn-primary" />
+            <input type="submit" value="PDF" name="pdf" class="btn btn-sm btn-primary" />
+            <input type="submit" value="TEX" name="tex" class="btn btn-sm btn-primary" />
+            {#<a href="{% url 'algopedia:user-notebook' 'pdf' %}" class="btn btn-sm btn-primary">PDF</a>#}
+            {#<a href="{% url 'algopedia:user-notebook' 'tex' %}" class="btn btn-sm btn-primary">TEX</a>#}
+        </form>
+</div>
+{% endblock %}

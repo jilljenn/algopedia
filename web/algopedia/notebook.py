@@ -6,21 +6,22 @@ from django.template.loader import render_to_string
 from algopedia.models import Algo, Implementation, Category, Star
 from pygments.formatters import LatexFormatter
 
-def generateTex(implementations):
-    # TODO options de génération : titre, auteur, mutlicol?, linenos ?, a4paper/letter? marges? tailles, ordre des algos, sections
+def generateTex(implementations, params):
+    # TODO options de génération : a4paper/letter? marges? tailles, ordre des algos, sections
     context = {
       'style_defs': LatexFormatter().get_style_defs(), # pygments premise
-      'title': 'Notebook',
-      'author': 'Algopedia',
+      'title': params.title,
+      'author': params.author,
       'stars': implementations,
-      'multicols': 1
+      'multicols': params.multicol,
+      'linenos': params.linenos,
     }
     return render_to_string('algopedia/notebook.tex', context)
 
-def generatePdf(implementations):
+def generatePdf(implementations, params):
     """Returns the absolute pathname of the pdf file (to be deleted).
     """
-    latex = generateTex(implementations)
+    latex = generateTex(implementations, params)
 
     # In a temporary folder, make temporary files
     tmp_folder = TemporaryDirectory()
