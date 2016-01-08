@@ -28,7 +28,7 @@
         <h5>My implementations:</h5>
         <table class="table table-striped ">
             <tr>
-                <th>Algo</th><th>Language</th><th>Actions</th><th>Date</th><th>Visible</th><th>Stars</th>
+                <th>Algo</th><th>Language</th><th>Actions</th><th>Date</th><th>Visible</th><th>Starred</th><th>Stars</th>
             </tr>
             {% for implem in implementations %}
                 <tr>
@@ -54,6 +54,7 @@
                         <span class="glyphion glyphicon-remove"></span>
                     {% endif %}
                     <td>{% checkbox_star stars implem.pk %}</td>
+                    <td>{{ implem.stars_count }}</td>
                 </tr>
             {% empty %}
                 <tr>

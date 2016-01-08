@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.db import transaction
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Case, When, Value, IntegerField
 from algopedia.models import Algo, Implementation, Category, Star, Notebook
 from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
@@ -208,7 +208,10 @@ class UserProfile(TemplateView):
         context['stars_old'] = req.filter(active=False)
 
         # implementations
-        context['implementations'] = Implementation.objects.filter(user=self.request.user).order_by('algo__name')
+        context['implementations'] = Implementation.objects.filter(user=self.request.user)\
+            .annotate(stars_count=Count(Case(When(star__active=True, then=Value(1)),
+                 output_field=IntegerField())))\
+            .order_by('algo__name') # stars_count : only active stars
         context['stars'] = [star.implementation_id for star in context['stars_active']]
 
         return context
