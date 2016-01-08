@@ -1,4 +1,6 @@
 from django import template
+from random import choice
+import string
 
 register = template.Library()
 
@@ -23,3 +25,8 @@ def implementation_descr(context, implem, stars):
       'implem' : implem,
       'stars' : stars,
     }
+
+@register.assignment_tag()
+def random_id(length=5):
+    """Returns a random identifier of size [size]"""
+    return ''.join(choice(string.ascii_letters + string.digits) for _ in range(length))
