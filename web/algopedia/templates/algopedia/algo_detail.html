@@ -28,8 +28,9 @@
     <tr>
         <th>Language</th><th>Author</th><th>Actions</th>
         {% if user.is_authenticated %}
-            <th>Stars</th>
+            <th>Starred</th>
         {% endif %}
+        <th>Stars</th>
     </tr>
     {% for implem in implementations %}
         <tr>
@@ -54,6 +55,7 @@
             {% if user.is_authenticated %}
                 <td>{% checkbox_star stars implem.pk %}</td>
             {% endif %}
+            <td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>
         </tr>
     {% empty %}
          <tr>

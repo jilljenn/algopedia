@@ -57,19 +57,25 @@ function init() {
   $("input:checkbox.checkbox_star").change(function() {
     id=parseInt($(this).attr('name').split('_')[1])
     state = $(this).is(":checked")
-    $.ajax({
-      url: '/ajax/star/' + (state ? 'add/' : 'remove/') + id,
-      type: 'GET',
-    })
-    .done(function(data){
-      // update other checkboxes with same id
-      $("input:checkbox.checkbox_star[name=star_"+id+"]").prop("checked", state)
-    })
-    .fail(function() {
+    atFail = function() {
       // reset
       $("input:checkbox.checkbox_star[name=star_"+id+"]").prop("checked", !state)
       alert("An error occured :-( Please try again later")
+    }
+    $.getJSON('/ajax/star/' + (state ? 'add/' : 'remove/') + id)
+    .done(function(data) {
+      if(data.status == "ok") {
+        // update other checkboxes with same id
+        $("input:checkbox.checkbox_star[name=star_"+id+"]").prop("checked", state)
+        // update counter
+        $(".star_count_"+id).each(function() {
+          $(this).html(data.stars_count)
+        })
+      }
+      else
+        atFail()
     })
+    .fail(atFail)
   });
 }
 init();

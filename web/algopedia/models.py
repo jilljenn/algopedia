@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Count, Case, When, Value, IntegerField
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter, LatexFormatter
@@ -26,7 +27,16 @@ class Algo(models.Model):
         return reverse('algopedia:algo-detail', kwargs={'pk': self.pk})
 
 
+class ImplementationManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        """Add field stars_count"""
+        return super(ImplementationManager, self).get_queryset(*args, **kwargs).\
+            annotate(stars_count=Count(Case(When(star__active=True, then=Value(1)),\
+            output_field=IntegerField())))
+
 class Implementation(models.Model):
+    objects = ImplementationManager()
+
     user = models.ForeignKey(User)
     algo = models.ForeignKey('Algo')
     code = models.TextField()
@@ -57,7 +67,7 @@ class Implementation(models.Model):
         return highlight(self.code, self.get_lexer(), LatexFormatter(linenos=False)) #, envname='lstlisting'))
 
     def __str__(self):
-        return str(self.algo) + " by " + str(self.user) + " in " + str(self.lang)
+        return str(self.algo) + " by " + str(self.user) + " in " + str(self.lang) + " (" + str(self.id) + ")"
 
 
 class Language(models.Model):

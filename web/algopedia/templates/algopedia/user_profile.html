@@ -54,7 +54,7 @@
                         <span class="glyphion glyphicon-remove"></span>
                     {% endif %}
                     <td>{% checkbox_star stars implem.pk %}</td>
-                    <td>{{ implem.stars_count }}</td>
+                    <td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>
                 </tr>
             {% empty %}
                 <tr>
@@ -69,7 +69,7 @@
         <h5>Starred implementations:</h5>
         <table class="table table-striped">
             <tr>
-                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
+                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Starred</th><!--<th>Stars</th>-->
             </tr>
             {% for star in stars_active %}
             {% with star.implementation as implem %}
@@ -94,6 +94,7 @@
                         </a>
                     </td>
                     <td>{% checkbox_star True implem.pk %}</td>
+                    <!--<td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>-->
                 </tr>
             {% endwith %}
             {% empty %}
@@ -106,7 +107,7 @@
         <h5>Previously starred implementations:</h5>
         <table class="table table-striped ">
             <tr>
-                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Stars</th>
+                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Starred</th><!--<th>Stars</th>-->
             </tr>
             {% for star in stars_old %}
             {% with star.implementation as implem %}
@@ -131,6 +132,7 @@
                         </a>
                     </td>
                     <td>{% checkbox_star False implem.pk %}</td>
+                    <!--<td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>-->
                 </tr>
             {% endwith %}
             {% empty %}

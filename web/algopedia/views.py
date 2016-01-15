@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.db import transaction
-from django.db.models import Count, Q, Case, When, Value, IntegerField
+from django.db.models import Count, Q
 from algopedia.models import Algo, Implementation, Category, Star, Notebook
 from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
@@ -36,7 +36,7 @@ class AlgoDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AlgoDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
-        context['implementations'] = Implementation.objects.filter(algo=self.kwargs['pk']).filter(visible=True).order_by('lang__name')
+        context['implementations'] = Implementation.objects.filter(algo=self.kwargs['pk']).filter(visible=True).order_by('lang__name', '-stars_count')
         context['categories_current'] = context['object'].category.values_list('pk', flat=True)
         context['title'] += " - algo - " + context['object'].name
         if self.request.user.is_authenticated():
@@ -128,12 +128,11 @@ class ImplementationDetailAjax(View):
             context['starred'] = Star.objects.filter(implementation_id=kwargs['pk'], user=self.request.user, active=True).exists()
         return render(request, 'algopedia/ajax_implementation_detail.html', context)
 
-def starAddRemove(action, user, implementation_id):
-    implem = get_object_or_404(Implementation, pk=implementation_id)
+def starAddRemove(action, user, implem):
     if action == 'add':
-        Star.objects.update_or_create(defaults={'active':True}, implementation=implem, user=user)
+        Star.objects.update_or_create(defaults={'active':True}, implementation_id=implem, user=user)
     else:
-        star = get_object_or_404(Star, implementation=implem, user=user)
+        star = get_object_or_404(Star, implementation_id=implem, user=user)
         star.active = False
         star.save()
 
@@ -142,7 +141,8 @@ def starAddRemove(action, user, implementation_id):
 class StarAjax(View):
     def get(self, request, *args, **kwargs):
         starAddRemove(kwargs['action'], request.user, kwargs['pk'])
-        return JsonResponse({'status':'ok'})
+        stars_count = get_object_or_404(Implementation, pk=kwargs['pk']).stars_count
+        return JsonResponse({'status':'ok', 'stars_count':stars_count})
 
 class StarRedirect(View):
     def get(self, request, *args, **kwargs):
@@ -209,9 +209,7 @@ class UserProfile(TemplateView):
 
         # implementations
         context['implementations'] = Implementation.objects.filter(user=self.request.user)\
-            .annotate(stars_count=Count(Case(When(star__active=True, then=Value(1)),
-                 output_field=IntegerField())))\
-            .order_by('algo__name') # stars_count : only active stars
+            .order_by('algo__name')
         context['stars'] = [star.implementation_id for star in context['stars_active']]
 
         return context
