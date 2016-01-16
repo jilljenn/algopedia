@@ -26,15 +26,16 @@
 
 
         <h5>My implementations:</h5>
+        <input type="checkbox" id="implem-invisible-checkbox" checked="checked"/><label for="implem-invisible-checkbox">Hide edited implementations</label>
         <table class="table table-striped ">
             <tr>
                 <th>Algo</th><th>Language</th><th>Actions</th><th>Date</th><th>Visible</th><th>Starred</th><th>Stars</th>
             </tr>
             {% for implem in implementations %}
-                <tr>
-                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
-                    <td>{{ implem.lang.name }}</td>
-                    <td>
+                <tr{% if not implem.visible %} class="implem-invisible"{% endif %}>{# In all <td>, <div> is to hide content with #implem-invisible-checkbox #}
+                    <td><div><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></div></td>
+                    <td><div>{{ implem.lang.name }}</div></td>
+                    <td><div>
                         <a href="{% url 'algopedia:implementation-detail' implem.pk %}" class="implementation-detail-link"
                     data-remote="false"
                     data-implementation-id="{{ implem.pk }}"
@@ -45,16 +46,17 @@
                         <a href="{% url 'algopedia:implementation-edit' implem.pk %}">
                              | Edit <span class="glyphicon glyphicon-wrench"></span>
                         </a>
-                    </td>
-                    <td>{{ implem.date }}</td>
-                    <td>
+                    </div></td>
+                    <td><div>{{ implem.date }}</div></td>
+                    <td><div>
                     {% if implem.visible %}
                         <span class="glyphicon glyphicon-ok"></span>
                     {% else %}
                         <span class="glyphion glyphicon-remove"></span>
                     {% endif %}
-                    <td>{% checkbox_star stars implem.pk %}</td>
-                    <td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>
+                    </div></td>
+                    <td><div>{% checkbox_star stars implem.pk %}</div></td>
+                    <td class="star_count_{{ implem.pk }}"><div>{{ implem.stars_count }}</div></td>
                 </tr>
             {% empty %}
                 <tr>

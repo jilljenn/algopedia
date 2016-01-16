@@ -131,3 +131,39 @@ input[type="checkbox"].checkbox_star:not(:checked)+label::after {
 .jsonly { /* to be deleted in javascript */
   display: none;
 }
+/* checkbox "Hide edited implementations" */
+#implem-invisible-checkbox, #implem-invisible-checkbox+label {
+  display: none; /* Hide option in old browsers */
+  float: right;
+  font-size: 0.8em;
+  margin-right: 5px;
+}
+#implem-invisible-checkbox:checked, #implem-invisible-checkbox:not(:checked),
+#implem-invisible-checkbox:checked+label, #implem-invisible-checkbox:not(:checked)+label {
+  display: initial; /* Show option in recent browsers */
+}
+/* base style */
+tr.implem-invisible > td > div {
+  -webkit-transition: max-height 0.8s;
+  -moz-transition: max-height 0.8s;
+  -o-transition: max-height 0.8s;
+  transition: max-height 0.8s;
+  overflow: hidden;
+}
+tr.implem-invisible > td {
+  -webkit-transition: padding 0.8s;
+  -moz-transition: padding 0.8s;
+  -o-transition: padding 0.8s;
+  transition: padding 0.8s;
+}
+/* hidden rows */
+#implem-invisible-checkbox:checked ~ * tr.implem-invisible > td > div {
+  max-height: 0;
+}
+#implem-invisible-checkbox:checked ~ * tr.implem-invisible > td {
+  padding: 0 8px; /* 8px as for other td */
+}
+/* shown rows */
+#implem-invisible-checkbox:not(:checked) ~ * tr.implem-invisible > td > div {
+  max-height: 50px;
+}
