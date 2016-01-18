@@ -118,6 +118,7 @@ class ImplementationDetail(DetailView):
         context = populate_context(context)
         context['title'] += " - implementation - detail"
         context['categories_current'] = context['object'].algo.category.values_list('pk', flat=True)
+        context['children'] = Implementation.objects.filter(parent_id=context['object'])
         if self.request.user.is_authenticated():
             context['starred'] = Star.objects.filter(implementation_id=context['object'].pk, user=self.request.user, active=True).exists()
         return context

@@ -1,10 +1,51 @@
 {% extends "algopedia/base.html" %}
+{% load algopedia_tags %}
 {% block content %}
+
+{% include 'algopedia/implementation_modal.html' %}
 
 <div class="container">
 <h4>Implementation of {{ object.algo.name }}</h4>
 
 {% include 'algopedia/ajax_implementation_detail.html' %}
+
+<hr>
+<h5>Edited versions</h5>
+<table class="table table-striped">
+    <tr>
+        <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Starred</th><th>Stars</th>
+    </tr>
+    {% for implem in children %}
+        <tr>
+            <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
+            <td>{{ implem.lang.name }}</td>
+            <td>{{ implem.user }}</td>
+            <td>
+                <a href="{% url 'algopedia:implementation-detail' implem.pk %}" class="implementation-detail-link"
+                    data-remote="false"
+                    data-implementation-id="{{ implem.pk }}"
+                    data-implementation-user="{{ implem.user }}"
+                    data-implementation-lang="{{ implem.lang }}"
+                    data-toggle="modal" data-target="#modal_implementation_detail">See <span class="glyphicon glyphicon-search"></span></a>
+                <a href="{% url 'algopedia:implementation-detail' implem.pk %}" > | More <span class="glyphicon glyphicon-zoom-in"></span></a>
+                <a href="{% url 'algopedia:implementation-edit' implem.pk %}">
+                {% if implem.user.pk = user.pk %}
+                     | Edit <span class="glyphicon glyphicon-wrench"></span>
+                {% else %}
+                     | Fork <span class="glyphicon glyphicon-random"></span>
+                {% endif %}
+                </a>
+                <a href="{% url 'algopedia:implementation-diff' object.pk implem.pk %}">| Diff <span class="glyphicon glyphicon-transfer"></span></a>
+            </td>
+            <td>{% checkbox_star True implem.pk %}</td>
+            <td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>
+        </tr>
+    {% empty %}
+         <tr>
+             <td colspan="6" style="text-align: center">This implementation has no children.</td>
+         </tr>
+    {% endfor %}
+</table>
 </div>
 
 {% endblock %}
