@@ -5,25 +5,24 @@ import string
 register = template.Library()
 
 @register.inclusion_tag('algopedia/tag_checkbox_star.html', takes_context=True)
-def checkbox_star(context, stars, id):
+def checkbox_star(context, id):
     """ Customized tag to generate a star checkbox
-    stars : either a list of ids or a boolean
     id : id of the implementation
-    the star is checked if the id is in stars or if stars is true
+    the star is checked if its id is in context['stars']
     """
     return {
       'request' : context['request'],
-      'stars' : stars,
+      'stars' : context['stars'],
       'id' : id
     }
 
 @register.inclusion_tag('algopedia/tag_implementation_descr.html', takes_context=True)
-def implementation_descr(context, implem, stars):
+def implementation_descr(context, implem):
     return {
       'request' : context['request'],
       'user' : context['user'],
       'implem' : implem,
-      'stars' : stars,
+      'stars' : context['stars'],
     }
 
 @register.assignment_tag()

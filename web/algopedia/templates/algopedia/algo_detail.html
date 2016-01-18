@@ -53,7 +53,7 @@
                 </a>
             </td>
             {% if user.is_authenticated %}
-                <td>{% checkbox_star stars implem.pk %}</td>
+                <td>{% checkbox_star implem.pk %}</td>
             {% endif %}
             <td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>
         </tr>

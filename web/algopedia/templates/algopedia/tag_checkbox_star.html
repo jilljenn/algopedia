@@ -2,7 +2,7 @@
 {% random_id as uniq_id %}{# we need a uniq id if the same star is displayed several times #}
 <input type="checkbox" class="checkbox_star" name="star_{{ id }}" id="star_{{ id }}_{{ uniq_id }}" {% if id in stars or stars = True %}checked="checked" {% endif %}/><label for="star_{{ id }}_{{ uniq_id }}" class="jsonly"></label>
 <noscript>
-{% if id in stars or stars = True %}
+{% if id in stars %}
   <a href="{% url 'algopedia:star-redirect' 'remove' id %}?next={{ request.path|urlencode }}" class="glyphicon glyphicon-star"></a>
 {% else %}
   <a href="{% url 'algopedia:star-redirect' 'add' id %}?next={{ request.path|urlencode }}" class="glyphicon glyphicon-star-empty"></a>

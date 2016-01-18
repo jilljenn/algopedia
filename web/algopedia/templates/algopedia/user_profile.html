@@ -55,7 +55,7 @@
                         <span class="glyphion glyphicon-remove"></span>
                     {% endif %}
                     </div></td>
-                    <td><div>{% checkbox_star stars implem.pk %}</div></td>
+                    <td><div>{% checkbox_star implem.pk %}</div></td>
                     <td class="star_count_{{ implem.pk }}"><div>{{ implem.stars_count }}</div></td>
                 </tr>
             {% empty %}
@@ -95,7 +95,7 @@
                         {% endif %}
                         </a>
                     </td>
-                    <td>{% checkbox_star True implem.pk %}</td>
+                    <td>{% checkbox_star implem.pk %}</td>
                     <!--<td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>-->
                 </tr>
             {% endwith %}
@@ -133,7 +133,7 @@
                         {% endif %}
                         </a>
                     </td>
-                    <td>{% checkbox_star False implem.pk %}</td>
+                    <td>{% checkbox_star implem.pk %}</td>
                     <!--<td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>-->
                 </tr>
             {% endwith %}

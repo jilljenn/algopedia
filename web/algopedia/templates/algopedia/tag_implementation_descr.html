@@ -11,7 +11,7 @@
         </li>
     {% endif %}
     {% if user.is_authenticated %}
-        <li>Starred: {% checkbox_star stars implem.pk %}</li>
+        <li>Starred: {% checkbox_star implem.pk %}</li>
     {% endif %}
     <li>
         <a href="{% url 'algopedia:implementation-edit' implem.pk %}" class="btn btn-xs btn-default">

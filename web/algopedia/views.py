@@ -22,6 +22,11 @@ def populate_context(context):
     context['title'] = context.get('title', 'Algopedia')
     return context
 
+
+def stars_list(stars):
+    return [star.implementation_id for star in stars]
+
+
 class AlgoList(ListView):
     model = Algo
 
@@ -41,7 +46,7 @@ class AlgoDetail(DetailView):
         context['categories_current'] = context['object'].category.values_list('pk', flat=True)
         context['title'] += " - algo - " + context['object'].name
         if self.request.user.is_authenticated():
-            context['stars'] = [star.implementation_id for star in Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True)]
+            context['stars'] = stars_list(Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True))
         return context
 
 
@@ -120,10 +125,10 @@ class ImplementationDetail(DetailView):
         context['categories_current'] = context['object'].algo.category.values_list('pk', flat=True)
         context['children'] = Implementation.objects.filter(parent_id=context['object'])
         if self.request.user.is_authenticated():
-            context['stars'] = [star.implementation_id for star in Star.objects\
+            context['stars'] = stars_list(Star.objects\
                 .filter(user=self.request.user, active=True)\
-                .filter(Q(implementation__parent_id=context['object'].pk) | Q(implementation_id=context['object'].pk))]
-            context['starred'] = context['object'].pk in context['stars']
+                .filter(Q(implementation__parent_id=context['object'].pk)\
+                  | Q(implementation_id=context['object'].pk)))
         return context
 
 
@@ -131,7 +136,7 @@ class ImplementationDetailAjax(View):
     def get(self, request, *args, **kwargs):
         context = {'object' : get_object_or_404(Implementation, pk=kwargs['pk'])}
         if self.request.user.is_authenticated():
-            context['starred'] = Star.objects.filter(implementation_id=kwargs['pk'], user=self.request.user, active=True).exists()
+            context['stars'] = stars_list(Star.objects.filter(implementation_id=kwargs['pk'], user=self.request.user, active=True))
         return render(request, 'algopedia/ajax_implementation_detail.html', context)
 
 def starAddRemove(action, user, implem):
@@ -165,8 +170,9 @@ class ImplementationDiff(TemplateView):
         context['implem1'] = get_object_or_404(Implementation, pk=kwargs['pk1'])
         context['implem2'] = get_object_or_404(Implementation, pk=kwargs['pk2'])
         if self.request.user.is_authenticated():
-            context['starred1'] = Star.objects.filter(implementation_id=kwargs['pk1'], user=self.request.user, active=True).exists()
-            context['starred2'] = Star.objects.filter(implementation_id=kwargs['pk2'], user=self.request.user, active=True).exists()
+            context['stars'] = stars_list(Star.objects\
+                .filter(user=self.request.user, active=True)\
+                .filter(Q(implementation_id=kwargs['pk1']) | Q(implementation_id=kwargs['pk2'])))
         context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
         context['categories_current'] = Algo.objects.filter(Q(pk=context['implem1'].algo_id) | Q(pk=context['implem2'].algo_id)).values_list('pk', flat=True)
         context['title'] += " - implementation - diff"
@@ -186,7 +192,7 @@ class ImplementationEdit(UpdateView):
         context['title'] += " - implementation - edit"
         return context
 
-    # atomic : the parent is hid and the child is created simultaeneously
+    # atomic : the parent is hidden and the child is created simultaeneously
     @transaction.atomic
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -216,7 +222,7 @@ class UserProfile(TemplateView):
         # implementations
         context['implementations'] = Implementation.objects.filter(user=self.request.user)\
             .order_by('algo__name')
-        context['stars'] = [star.implementation_id for star in context['stars_active']]
+        context['stars'] = stars_list(context['stars_active'])
 
         return context
 
@@ -258,7 +264,8 @@ class NotebookParams(UpdateView):
 class NotebookGen(View):
     def get(self, request, *args, **kwargs):
         params = get_object_or_404(Notebook, user=self.request.user)
-        implementations = Star.objects.filter(user=self.request.user).filter(active=True).order_by('implementation__algo__name')
+        implementations = Star.objects.filter(user=self.request.user, active=True)\
+            .order_by('implementation__algo__name')
         if kwargs['format'] == 'tex':
             latex = generateTex(implementations, params)
             return HttpResponse(latex, content_type="application/x-tex")
