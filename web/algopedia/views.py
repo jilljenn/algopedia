@@ -10,6 +10,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from difflib import HtmlDiff
 from algopedia.notebook import generatePdf, generateTex
@@ -44,9 +45,10 @@ class AlgoDetail(DetailView):
         return context
 
 
+@method_decorator(staff_member_required, name='dispatch')
 class AlgoCreate(CreateView):
     model = Algo
-    fields = ['name', 'description']
+    fields = ['name', 'category', 'description']
 
     def get_context_data(self, **kwargs):
         context = super(AlgoCreate, self).get_context_data(**kwargs)
