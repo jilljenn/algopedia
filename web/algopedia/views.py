@@ -120,7 +120,10 @@ class ImplementationDetail(DetailView):
         context['categories_current'] = context['object'].algo.category.values_list('pk', flat=True)
         context['children'] = Implementation.objects.filter(parent_id=context['object'])
         if self.request.user.is_authenticated():
-            context['starred'] = Star.objects.filter(implementation_id=context['object'].pk, user=self.request.user, active=True).exists()
+            context['stars'] = [star.implementation_id for star in Star.objects\
+                .filter(user=self.request.user, active=True)\
+                .filter(Q(implementation__parent_id=context['object'].pk) | Q(implementation_id=context['object'].pk))]
+            context['starred'] = context['object'].pk in context['stars']
         return context
 
 

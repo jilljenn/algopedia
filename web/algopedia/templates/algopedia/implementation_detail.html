@@ -37,7 +37,7 @@
                 </a>
                 <a href="{% url 'algopedia:implementation-diff' object.pk implem.pk %}">| Diff <span class="glyphicon glyphicon-transfer"></span></a>
             </td>
-            <td>{% checkbox_star True implem.pk %}</td>
+            <td>{% checkbox_star stars implem.pk %}</td>
             <td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>
         </tr>
     {% empty %}
