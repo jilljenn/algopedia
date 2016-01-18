@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.db import transaction
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F, Case, When, IntegerField, Value
 from algopedia.models import Algo, Implementation, Category, Star, Notebook
 from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
@@ -215,7 +215,12 @@ class UserProfile(TemplateView):
         context['title'] += " - profile"
 
         # stars
-        req = Star.objects.filter(user=self.request.user)
+        # edited : implementation__implementation refers to children (parent reverse relation)
+        # we want to see if the same author has edited his implementation
+        req = Star.objects.filter(user=self.request.user)\
+            .annotate(edited=Count(Case(When(implementation__implementation__user=F('implementation__user'), then=Value(1)),\
+            output_field=IntegerField())))
+
         context['stars_active'] = req.filter(active=True)
         context['stars_old'] = req.filter(active=False)
 

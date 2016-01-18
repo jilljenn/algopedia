@@ -71,7 +71,7 @@
         <h5>Starred implementations:</h5>
         <table class="table table-striped">
             <tr>
-                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Starred</th><!--<th>Stars</th>-->
+                <th>Algo</th><th>Language</th><th>Author</th><th>Actions</th><th>Starred</th><!--<th>Stars</th>--><th>Edited by the author</th>
             </tr>
             {% for star in stars_active %}
             {% with star.implementation as implem %}
@@ -97,11 +97,18 @@
                     </td>
                     <td>{% checkbox_star implem.pk %}</td>
                     <!--<td class="star_count_{{ implem.pk }}">{{ implem.stars_count }}</td>-->
+                    <td>
+                    {% if star.edited > 0 %}
+                        <a href="{% url 'algopedia:implementation-detail' implem.pk %}#edited">Yes <span class="glyphicon glyphicon-warning-sign"></span></a>
+                    {% else %}
+                        No
+                    {% endif %}
+                    </td>
                 </tr>
             {% endwith %}
             {% empty %}
                  <tr>
-                     <td colspan="5" style="text-align: center">You don't have any starred implementation yet.</td>
+                     <td colspan="6" style="text-align: center">You don't have any starred implementation yet.</td>
                  </tr>
             {% endfor %}
         </table>
