@@ -1,3 +1,13 @@
-Django
+# system wide : install dependencies of pillow
+# for debian : libjpeg8 libjpeg-dev libpng12-0 libpng12-dev
+Pillow
+
+# wiki : currently the branch master is the near-released v0.1
+# that use recent versions of django
+git+git://github.com/django-wiki/django-wiki.git
+
+# included in wiki (in the right version)
+# Django
+
 django-allauth
 pygments
