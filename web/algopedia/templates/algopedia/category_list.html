@@ -17,7 +17,7 @@
         <div id="cat_collapse_{{ object.pk }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cat_heading_{{ object.pk }}">
             <div class="panel-body">
                 <ul>
-                {% for algo in object.algo.all %}
+                {% for algo in object.algos.all %}
                     <li><a href="{% url 'algopedia:algo-detail' algo.pk %}">{{ algo }}</a></li>
                 {% endfor %}
                 </ul>
