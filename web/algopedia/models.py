@@ -11,21 +11,10 @@ from pygments.lexers.special import TextLexer
 
 class Category(models.Model):
     name = models.CharField(max_length=42, unique=True)
+    algos = models.ManyToManyField('wiki.Article', related_name='category')
 
     def __str__(self):
         return self.name
-
-class Algo(models.Model):
-    name = models.CharField(max_length=42)
-    description = models.TextField()
-    category = models.ManyToManyField('Category', blank=True)
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse('algopedia:algo-detail', kwargs={'pk': self.pk})
-
 
 class ImplementationManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -38,7 +27,7 @@ class Implementation(models.Model):
     objects = ImplementationManager()
 
     user = models.ForeignKey(User)
-    algo = models.ForeignKey('Algo')
+    algo = models.ForeignKey('wiki.Article') # article of the wiki
     code = models.TextField()
     lang = models.ForeignKey('Language')
     parent = models.ForeignKey('Implementation', blank=True, null=True)

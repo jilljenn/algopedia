@@ -33,7 +33,7 @@
             </tr>
             {% for implem in implementations %}
                 <tr{% if not implem.visible %} class="implem-invisible"{% endif %}>{# In all <td>, <div> is to hide content with #implem-invisible-checkbox #}
-                    <td><div><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></div></td>
+                    <td><div><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.current_revision.title }}</a></div></td>
                     <td><div>{{ implem.lang.name }}</div></td>
                     <td><div>
                         <a href="{% url 'algopedia:implementation-detail' implem.pk %}" class="implementation-detail-link"
@@ -76,7 +76,7 @@
             {% for star in stars_active %}
             {% with star.implementation as implem %}
                 <tr>
-                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
+                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.current_revision.title }}</a></td>
                     <td>{{ implem.lang.name }}</td>
                     <td>{{ implem.user }}</td>
                     <td>
@@ -121,7 +121,7 @@
             {% for star in stars_old %}
             {% with star.implementation as implem %}
                 <tr>
-                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
+                    <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.current_revision.title }}</a></td>
                     <td>{{ implem.lang.name }}</td>
                     <td>{{ implem.user }}</td>
                     <td>

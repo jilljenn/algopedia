@@ -3,7 +3,7 @@
 
 <div class="container">
 <h4>Add an implementation</h4>
-Algo : {{ algo.name }}
+Algo : {{ algo.current_revision.title }}
 <form action="" method="POST">
 {% csrf_token %}
 {{ form.as_p }}

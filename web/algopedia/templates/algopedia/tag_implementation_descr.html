@@ -1,6 +1,6 @@
 {% load algopedia_tags %}
 <ul>
-    <li>Algorithm: <a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></li>
+    <li>Algorithm: <a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.current_revision.title }}</a></li>
     <li>Author: {{ implem.user }}</li>
     <li>Language: {{ implem.lang }}</li>
     <li>Date: {{ implem.date }}</li>

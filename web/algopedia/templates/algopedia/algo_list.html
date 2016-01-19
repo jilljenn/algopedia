@@ -5,7 +5,7 @@
 <ul>
 {% for object in object_list %}
     <li>
-        <a href="{% url 'algopedia:algo-detail' object.pk %}">{{ object.name }}</a>
+        <a href="{% url 'algopedia:algo-detail' object.pk %}">{{ object.current_revision.title }}</a>
         <ul class="categories">
         {% for category in object.category.all %}
           <li><a href="{% url 'algopedia:category-detail' category.pk %}" class="label label-primary">{{ category.name}}</a></li>

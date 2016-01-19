@@ -3,7 +3,7 @@ from subprocess import check_call, CalledProcessError
 from tempfile import TemporaryDirectory, mkstemp
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
-from algopedia.models import Algo, Implementation, Category, Star
+from algopedia.models import Implementation, Star
 from pygments.formatters import LatexFormatter
 
 def generateTex(implementations, params):

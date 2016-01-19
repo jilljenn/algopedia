@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.db import transaction
 from django.db.models import Count, Q, F, Case, When, IntegerField, Value
-from algopedia.models import Algo, Implementation, Category, Star, Notebook
+from algopedia.models import Implementation, Star, Notebook, Category
+from wiki.models import Article
 from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -18,7 +19,7 @@ import os
 from shutil import copyfileobj
 
 def populate_context(context):
-    context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
+    context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algos')).order_by('-num'))
     context['title'] = context.get('title', 'Algopedia')
     return context
 
@@ -28,7 +29,8 @@ def stars_list(stars):
 
 
 class AlgoList(ListView):
-    model = Algo
+    model = Article
+    template_name = "algopedia/algo_list.html"
 
     def get_context_data(self, **kwargs):
         context = super(AlgoList, self).get_context_data(**kwargs)
@@ -36,43 +38,40 @@ class AlgoList(ListView):
         context['title'] += " - algo - list"
         return context
 
+    def get_queryset(self):
+        # slug=algo_descriptions : special group to contains descriptions
+        # here we want to list all its children
+        return Article.objects\
+            .filter(urlpath__parent__slug='algo_descriptions')\
+            .order_by('current_revision__title')
+
 class AlgoDetail(DetailView):
-    model = Algo
+    model = Article
+    template_name = "algopedia/algo_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super(AlgoDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['implementations'] = Implementation.objects.filter(algo=self.kwargs['pk']).filter(visible=True).order_by('lang__name', '-stars_count')
         context['categories_current'] = context['object'].category.values_list('pk', flat=True)
-        context['title'] += " - algo - " + context['object'].name
+        context['title'] += " - algo - " + context['object'].current_revision.title
         if self.request.user.is_authenticated():
             context['stars'] = stars_list(Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True))
         return context
 
 
-@method_decorator(staff_member_required, name='dispatch')
-class AlgoCreate(CreateView):
-    model = Algo
-    fields = ['name', 'category', 'description']
-
-    def get_context_data(self, **kwargs):
-        context = super(AlgoCreate, self).get_context_data(**kwargs)
-        context = populate_context(context)
-        context['title'] += " - algo - create"
-        return context
-
-
-class CategoryDetail(TemplateView):
+class CategoryDetail(DetailView):
+    model = Category
     template_name = "algopedia/category_detail.html"
 
     def get_context_data(self, **kwargs):
-        pk = self.kwargs['pk']
         context = super(CategoryDetail, self).get_context_data(**kwargs)
+        pk = self.kwargs['pk']
         context = populate_context(context)
-        context['category'] = get_object_or_404(Category, pk=pk)
-        context['object_list'] = Algo.objects.filter(category=pk)
+        context['object_list'] = context['object'].algos\
+            .order_by('current_revision__title').all()
         context['categories_current'] = [int(pk)]
-        context['title'] += " - category - " + context['category'].name
+        context['title'] += " - category - " + context['object'].name
         return context
 
 class CategoryList(ListView):
@@ -82,10 +81,10 @@ class CategoryList(ListView):
         context = super(CategoryList, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['title'] += " - category - list"
-        context['object_list'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
-        context['algos'] = Algo.objects.all
         return context
 
+    def get_queryset(self):
+        return Category.objects.annotate(num=Count('algos')).order_by('-num')
 
 class ImplementationList(ListView):
     model = Implementation
@@ -104,14 +103,14 @@ class ImplementationCreate(CreateView):
     def get_context_data(self, **kwargs):
         context = super(ImplementationCreate, self).get_context_data(**kwargs)
         context = populate_context(context)
-        context['algo'] = get_object_or_404(Algo, pk=self.kwargs['algo'])
+        context['algo'] = get_object_or_404(Article, pk=self.kwargs['algo'])
         context['categories_current'] = context['algo'].category.values_list('pk', flat=True)
         context['title'] += " - implementation - create"
         return context
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        form.instance.algo = get_object_or_404(Algo, pk=self.kwargs['algo'])
+        form.instance.algo = get_object_or_404(Article, pk=self.kwargs['algo'])
         return super(ImplementationCreate, self).form_valid(form)
 
 
@@ -169,12 +168,14 @@ class ImplementationDiff(TemplateView):
         context = populate_context(context)
         context['implem1'] = get_object_or_404(Implementation, pk=kwargs['pk1'])
         context['implem2'] = get_object_or_404(Implementation, pk=kwargs['pk2'])
+        if context['implem1'].algo.pk != context['implem2'].algo.pk:
+            raise Http404
         if self.request.user.is_authenticated():
             context['stars'] = stars_list(Star.objects\
                 .filter(user=self.request.user, active=True)\
                 .filter(Q(implementation_id=kwargs['pk1']) | Q(implementation_id=kwargs['pk2'])))
         context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
-        context['categories_current'] = Algo.objects.filter(Q(pk=context['implem1'].algo_id) | Q(pk=context['implem2'].algo_id)).values_list('pk', flat=True)
+        context['categories_current'] = context['implem1'].algo.category.values_list('pk', flat=True)
         context['title'] += " - implementation - diff"
         return context
 
@@ -226,7 +227,7 @@ class UserProfile(TemplateView):
 
         # implementations
         context['implementations'] = Implementation.objects.filter(user=self.request.user)\
-            .order_by('algo__name')
+            .order_by('algo__current_revision__title')
         context['stars'] = stars_list(context['stars_active'])
 
         return context
@@ -270,7 +271,7 @@ class NotebookGen(View):
     def get(self, request, *args, **kwargs):
         params = get_object_or_404(Notebook, user=self.request.user)
         implementations = Star.objects.filter(user=self.request.user, active=True)\
-            .order_by('implementation__algo__name')
+            .order_by('implementation__algo__current_revision__title')
         if kwargs['format'] == 'tex':
             latex = generateTex(implementations, params)
             return HttpResponse(latex, content_type="application/x-tex")

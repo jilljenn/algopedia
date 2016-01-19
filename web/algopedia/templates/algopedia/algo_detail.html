@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-<h4>Algorithme :: {{ object.name }}</h4>
+<h4>Algorithme :: {{ object.current_revision.title }}</h4>
 
 <h5>Categories:</h5>
 <ul class="categories">
@@ -15,7 +15,7 @@
 <hr>
 
 <h5>Description:</h5>
-{{ object.description }}
+{{ object.get_cached_content }}
 
 <hr>
 

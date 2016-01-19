@@ -10,7 +10,7 @@
     </div>
 {% endif %}
 
-Algo : {{ algo.name }}
+Algo : {{ algo.current_revision.title }}
 <form action="" method="POST">
 {% csrf_token %}
 {{ form.as_p }}
