@@ -167,3 +167,17 @@ tr.implem-invisible > td {
 #implem-invisible-checkbox:not(:checked) ~ * tr.implem-invisible > td > div {
   max-height: 50px;
 }
+/* anchor tageted */
+h1:target, h2:target, h3:target, h4:target, h5:target, h6:target {
+  display: inline-block;
+  background: #ff9900 none repeat scroll 0% 0%;
+  border-radius: 10px;
+  padding: 5px;
+  -webkit-transition: background 3s;
+  -moz-transition: background 3s;
+  -o-transition: background 3s;
+  transition: background 3s;
+}
+h1:target::before, h2:target::before, h3:target::before, h4:target::before, h5:target::before, h6:target::before {
+  content: '# '
+}
