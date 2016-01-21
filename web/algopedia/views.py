@@ -3,8 +3,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import JsonResponse, HttpResponse, Http404
 from django.db import transaction
 from django.db.models import Count, Q, F, Case, When, IntegerField, Value
-from algopedia.models import Implementation, Star, Notebook, Category
-from wiki.models import Article
+from algopedia.models import Algo, Implementation, Category, Star, Notebook
 from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -29,8 +28,7 @@ def stars_list(stars):
 
 
 class AlgoList(ListView):
-    model = Article
-    template_name = "algopedia/algo_list.html"
+    model = Algo
 
     def get_context_data(self, **kwargs):
         context = super(AlgoList, self).get_context_data(**kwargs)
@@ -41,27 +39,26 @@ class AlgoList(ListView):
     def get_queryset(self):
         # slug=algo_descriptions : special group to contains descriptions
         # here we want to list all its children
-        return Article.objects\
+        return Algo.objects\
             .filter(urlpath__parent__slug='algo_descriptions')\
             .order_by('current_revision__title')
 
 class AlgoDetail(DetailView):
-    model = Article
-    template_name = "algopedia/algo_detail.html"
+    model = Algo
 
     def get_context_data(self, **kwargs):
         context = super(AlgoDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['implementations'] = Implementation.objects.filter(algo=self.kwargs['pk']).filter(visible=True).order_by('lang__name', '-stars_count')
         context['categories_current'] = context['object'].category.values_list('pk', flat=True)
-        context['title'] += " - algo - " + context['object'].current_revision.title
+        context['title'] += " - algo - " + context['object'].name
         if self.request.user.is_authenticated():
             context['stars'] = stars_list(Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True))
         return context
 
     def get_object(self):
         # slug=algo_descriptions : special group to contains descriptions
-        return get_object_or_404(Article, pk=self.kwargs['pk'], urlpath__parent__slug='algo_descriptions')
+        return get_object_or_404(Algo, pk=self.kwargs['pk'], urlpath__parent__slug='algo_descriptions')
 
 
 class CategoryDetail(DetailView):
@@ -107,14 +104,14 @@ class ImplementationCreate(CreateView):
     def get_context_data(self, **kwargs):
         context = super(ImplementationCreate, self).get_context_data(**kwargs)
         context = populate_context(context)
-        context['algo'] = get_object_or_404(Article, pk=self.kwargs['algo'])
+        context['algo'] = get_object_or_404(Algo, pk=self.kwargs['algo'])
         context['categories_current'] = context['algo'].category.values_list('pk', flat=True)
         context['title'] += " - implementation - create"
         return context
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        form.instance.algo = get_object_or_404(Article, pk=self.kwargs['algo'])
+        form.instance.algo = get_object_or_404(Algo, pk=self.kwargs['algo'])
         return super(ImplementationCreate, self).form_valid(form)
 
 

@@ -17,7 +17,7 @@
     </tr>
     {% for implem in children %}
         <tr>
-            <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.current_revision.title }}</a></td>
+            <td><a href="{% url 'algopedia:algo-detail' implem.algo.pk %}">{{ implem.algo.name }}</a></td>
             <td>{{ implem.lang.name }}</td>
             <td>{{ implem.user }}</td>
             <td>

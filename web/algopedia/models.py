@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Count, Case, When, Value, IntegerField
+from wiki.models import Article
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter, LatexFormatter
@@ -11,10 +12,24 @@ from pygments.lexers.special import TextLexer
 
 class Category(models.Model):
     name = models.CharField(max_length=42, unique=True)
-    algos = models.ManyToManyField('wiki.Article', related_name='category')
+    algos = models.ManyToManyField('Algo', related_name='category')
 
     def __str__(self):
         return self.name
+
+class Algo(Article):
+    """Proxy model for wiki.Article"""
+    class Meta:
+        proxy = True
+
+    def _get_name(self):
+        return self.current_revision.title
+
+    def description(self):
+        return super(Algo, self).get_cached_content()
+
+    name = property(_get_name) # access name with Algo.name
+
 
 class ImplementationManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -27,7 +42,7 @@ class Implementation(models.Model):
     objects = ImplementationManager()
 
     user = models.ForeignKey(User)
-    algo = models.ForeignKey('wiki.Article') # article of the wiki
+    algo = models.ForeignKey('Algo')
     code = models.TextField()
     lang = models.ForeignKey('Language')
     parent = models.ForeignKey('Implementation', blank=True, null=True)

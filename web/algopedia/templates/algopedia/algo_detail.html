@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-<h4>Algorithme :: {{ object.current_revision.title }}</h4>
+<h4>Algorithme :: {{ object.name }}</h4>
 
 <a href="{% url 'wiki:edit' article_id=object.id %}" class="btn btn-sm btn-primary pull-right" style="margin-top: -35px">
     <span class="glyphicon glyphicon-pencil"></span>
@@ -20,7 +20,7 @@
 <hr>
 
 <h5>Description:</h5>
-{{ object.get_cached_content }}
+{{ object.description }}
 
 <hr>
 
