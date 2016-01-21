@@ -5,6 +5,11 @@
 <div class="container">
 <h4>Algorithme :: {{ object.current_revision.title }}</h4>
 
+<a href="{% url 'wiki:edit' article_id=object.id %}" class="btn btn-sm btn-primary pull-right" style="margin-top: -35px">
+    <span class="glyphicon glyphicon-pencil"></span>
+    Edit description
+</a>
+
 <h5>Categories:</h5>
 <ul class="categories">
 {% for cat in object.category.all %}
