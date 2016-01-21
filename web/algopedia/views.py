@@ -59,6 +59,10 @@ class AlgoDetail(DetailView):
             context['stars'] = stars_list(Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True))
         return context
 
+    def get_object(self):
+        # slug=algo_descriptions : special group to contains descriptions
+        return get_object_or_404(Article, pk=self.kwargs['pk'], urlpath__parent__slug='algo_descriptions')
+
 
 class CategoryDetail(DetailView):
     model = Category
