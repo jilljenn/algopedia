@@ -5,7 +5,7 @@
 <div class="container">
 <h4>Algorithme :: {{ object.name }}</h4>
 
-<h5>Categories:</h5>
+<h5 class="categories">Categories:</h5>
 <ul class="categories">
 {% for cat in object.category.all %}
     <li><a href="{% url 'algopedia:category-detail' cat.pk %}" class="label label-primary">{{ cat.name }}</a></li>

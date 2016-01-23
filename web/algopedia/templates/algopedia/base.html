@@ -75,7 +75,7 @@
 <footer class="footer">
     <div class="container">
         <div class="col-xs-12 col-md-8">
-            <h3>Categories :</h3>
+            <h3 class="categories">Categories :</h3>
             <ul class="categories">
             {% for cat in categories %}
                 <li><a href="{% url 'algopedia:category-detail' cat.pk %}" class="label {% if cat.pk in categories_current %}label-primary{% else %}label-default{% endif %}">{{ cat.name }} ({{ cat.num }})</a></li>

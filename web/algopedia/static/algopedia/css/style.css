@@ -19,6 +19,9 @@ ul.categories li {
   display: inline-block;
   margin: 3px 3px;
 }
+h5.categories, h3.categories {
+  display: inline-block;
+}
 /* pygments : reset bootstrap style */
 .highlighttable pre {
   background-color: transparent;
