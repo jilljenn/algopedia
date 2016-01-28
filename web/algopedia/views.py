@@ -179,6 +179,7 @@ class ImplementationDiff(TemplateView):
         return context
 
 
+@method_decorator(login_required, name='dispatch')
 class ImplementationEdit(UpdateView):
     model = Implementation
     fields = ['lang', 'code']
