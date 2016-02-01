@@ -18,7 +18,7 @@ import os
 from shutil import copyfileobj
 
 def populate_context(context):
-    # TODO fonctionne mais surement peu efficace...
+    # TODO fonctionne PAS
     context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algoversion__algo__current')).order_by('-num'))
     context['title'] = context.get('title', 'Algopedia')
     return context
@@ -70,7 +70,7 @@ class AlgoEdit(UpdateView):
     @transaction.atomic
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.pk = None # create a new row TODO m2m category ok ?
+        form.instance.pk = None # create a new row
         form.save()
         # update algo.current
         form.instance.algo.current = form.instance
@@ -127,7 +127,7 @@ class CategoryList(ListView):
         return context
 
     def get_queryset(self):
-        # TODO pas efficace
+        # TODO fonctionne PAS
         return Category.objects.annotate(num=Count('algoversion__algo__current')).order_by('-num')
 
 
