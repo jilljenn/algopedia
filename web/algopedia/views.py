@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.db import transaction
 from django.db.models import Count, Q, F, Case, When, IntegerField, Value
 from algopedia.models import Algo, Implementation, Category, Star, Notebook
@@ -161,12 +161,14 @@ class ImplementationDiff(TemplateView):
         context = populate_context(context)
         context['implem1'] = get_object_or_404(Implementation, pk=kwargs['pk1'])
         context['implem2'] = get_object_or_404(Implementation, pk=kwargs['pk2'])
+        if context['implem1'].algo.pk != context['implem2'].algo.pk:
+            raise Http404
         if self.request.user.is_authenticated():
             context['stars'] = stars_list(Star.objects\
                 .filter(user=self.request.user, active=True)\
                 .filter(Q(implementation_id=kwargs['pk1']) | Q(implementation_id=kwargs['pk2'])))
         context['diff'] = HtmlDiff().make_table(context['implem1'].code.split('\n'), context['implem2'].code.split('\n'))
-        context['categories_current'] = Algo.objects.filter(Q(pk=context['implem1'].algo_id) | Q(pk=context['implem2'].algo_id)).values_list('pk', flat=True)
+        context['categories_current'] = context['implem1'].algo.category.values_list('pk', flat=True)
         context['title'] += " - implementation - diff"
         return context
 
