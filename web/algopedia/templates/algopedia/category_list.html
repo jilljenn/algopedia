@@ -18,7 +18,9 @@
             <div class="panel-body">
                 <ul>
                 {% for algoversion in object.algoversion_set.all %}
-                    <li><a href="{% url 'algopedia:algo-detail' algoversion.algo_id %}">{{ algoversion.name }}</a></li>
+                    {% if algoversion.algo.current_id = algoversion.pk %}{# TODO pas beau #}
+                        <li><a href="{% url 'algopedia:algo-detail' algoversion.algo_id %}">{{ algoversion.name }}</a></li>
+                    {% endif %}
                 {% endfor %}
                 </ul>
             </div>
