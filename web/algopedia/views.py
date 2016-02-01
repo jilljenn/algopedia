@@ -55,11 +55,11 @@ class CategoryDetail(TemplateView):
     template_name = "algopedia/category_detail.html"
 
     def get_context_data(self, **kwargs):
-        pk = self.kwargs['pk']
         context = super(CategoryDetail, self).get_context_data(**kwargs)
         context = populate_context(context)
+        pk = self.kwargs['pk']
         context['category'] = get_object_or_404(Category, pk=pk)
-        context['object_list'] = Algo.objects.filter(category=pk)
+        context['object_list'] = Algo.objects.filter(current__category=pk)
         context['categories_current'] = [int(pk)]
         context['title'] += " - category - " + context['category'].name
         return context
@@ -221,7 +221,7 @@ class UserProfile(TemplateView):
 
         # implementations
         context['implementations'] = Implementation.objects.filter(user=self.request.user)\
-            .order_by('algo__name')
+            .order_by('algo__current__name')
         context['stars'] = stars_list(context['stars_active'])
 
         return context
@@ -265,7 +265,7 @@ class NotebookGen(View):
     def get(self, request, *args, **kwargs):
         params = get_object_or_404(Notebook, user=self.request.user)
         implementations = Star.objects.filter(user=self.request.user, active=True)\
-            .order_by('implementation__algo__name')
+            .order_by('implementation__algo__current__name')
         if kwargs['format'] == 'tex':
             latex = generateTex(implementations, params)
             return HttpResponse(latex, content_type="application/x-tex")
