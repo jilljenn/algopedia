@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import JsonResponse, HttpResponse, Http404
+from django.http import JsonResponse, HttpResponse, Http404, HttpResponseRedirect
 from django.db import transaction
 from django.db.models import Count, Q, F, Case, When, IntegerField, Value
-from algopedia.models import Algo, Implementation, Category, Star, Notebook
+from algopedia.models import Algo, AlgoVersion, Implementation, Category, Star, Notebook
 from django.views.generic import View, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -49,6 +49,33 @@ class AlgoDetail(DetailView):
         if self.request.user.is_authenticated():
             context['stars'] = stars_list(Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True))
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class AlgoEdit(UpdateView):
+    model = AlgoVersion
+    fields = ['name', 'description', 'category']
+    template_name = 'algopedia/algo_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlgoEdit, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        algoVersion = self.get_object()
+        context['categories_current'] = algoVersion.category.values_list('pk', flat=True)
+        context['title'] += " - algo - edit"
+        context['form_title'] = "Edit " + algoVersion.name
+        return context
+
+    # atomic : algo.current is updated simultaeneously
+    @transaction.atomic
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.pk = None # create a new row TODO m2m category ok ?
+        form.save()
+        # update algo.current
+        form.instance.algo.current = form.instance
+        form.instance.algo.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CategoryDetail(TemplateView):

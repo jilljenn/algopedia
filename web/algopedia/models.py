@@ -36,9 +36,6 @@ class Algo(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse('algopedia:algo-detail', kwargs={'pk': self.pk})
-
 
 class AlgoVersion(models.Model):
     algo = models.ForeignKey('Algo')
@@ -52,6 +49,10 @@ class AlgoVersion(models.Model):
 
     def __str__(self):
         return self.name + " by " + str(self.author) + " (" + str(self.date) + ")"
+
+    def get_absolute_url(self):
+        return reverse('algopedia:algo-detail', kwargs={'pk': self.algo_id})
+
 
 class ImplementationManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
