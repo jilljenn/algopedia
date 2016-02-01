@@ -16,16 +16,42 @@ class Category(models.Model):
         return self.name
 
 class Algo(models.Model):
-    name = models.CharField(max_length=42)
-    description = models.TextField()
-    category = models.ManyToManyField('Category', blank=True)
+    current = models.OneToOneField('AlgoVersion', blank=True, null=True,\
+        related_name="current_reverse")
+        # related_name : otherwise it clashes with AlgoVersion.algo
 
+    def _get_name(self):
+        return self.current.name # TODO si current=null ?
+    name = property(_get_name) # access name with Algo.name
+
+    
+    def _get_description(self):
+        return self.current.description
+    description = property(_get_description) # access description with Algo.description
+    
+    def _get_category(self):
+        return self.current.category
+    category = property(_get_category) # access description with Algo.description
+    
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('algopedia:algo-detail', kwargs={'pk': self.pk})
 
+
+class AlgoVersion(models.Model):
+    algo = models.ForeignKey('Algo')
+    author = models.ForeignKey(User)
+    date = models.DateTimeField(auto_now_add=True)
+
+    # content
+    name = models.CharField(max_length=42)
+    description = models.TextField()
+    category = models.ManyToManyField('Category', blank=True) # TODO m2m long à copier ?
+
+    def __str__(self):
+        return self.name + " by " + str(self.author) + " (" + str(self.date) + ")"
 
 class ImplementationManager(models.Manager):
     def get_queryset(self, *args, **kwargs):

@@ -18,7 +18,8 @@ import os
 from shutil import copyfileobj
 
 def populate_context(context):
-    context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
+    # TODO fonctionne mais surement peu efficace...
+    context['categories'] = context.get('categories', Category.objects.annotate(num=Count('algoversion__algo__current')).order_by('-num'))
     context['title'] = context.get('title', 'Algopedia')
     return context
 
@@ -82,7 +83,7 @@ class CategoryList(ListView):
         context = super(CategoryList, self).get_context_data(**kwargs)
         context = populate_context(context)
         context['title'] += " - category - list"
-        context['object_list'] = context.get('categories', Category.objects.annotate(num=Count('algo')).order_by('-num'))
+        context['object_list'] = context.get('categories', Category.objects.annotate(num=Count('algoversion__algo__current')).order_by('-num'))
         context['algos'] = Algo.objects.all
         return context
 

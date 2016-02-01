@@ -1,5 +1,5 @@
 from django.contrib import admin
-from algopedia.models import Algo, Implementation, Language, Category, Star, Notebook
+from algopedia.models import Algo, AlgoVersion, Implementation, Language, Category, Star, Notebook
 
 class AlgoAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -13,6 +13,7 @@ class StarAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Algo, AlgoAdmin)
+admin.site.register(AlgoVersion)
 admin.site.register(Implementation, ImplementationAdmin)
 admin.site.register(Language)
 admin.site.register(Category)
