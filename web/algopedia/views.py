@@ -51,18 +51,6 @@ class AlgoDetail(DetailView):
         return context
 
 
-@method_decorator(staff_member_required, name='dispatch')
-class AlgoCreate(CreateView):
-    model = Algo
-    fields = ['name', 'category', 'description']
-
-    def get_context_data(self, **kwargs):
-        context = super(AlgoCreate, self).get_context_data(**kwargs)
-        context = populate_context(context)
-        context['title'] += " - algo - create"
-        return context
-
-
 class CategoryDetail(TemplateView):
     template_name = "algopedia/category_detail.html"
 

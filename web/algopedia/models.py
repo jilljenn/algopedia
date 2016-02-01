@@ -24,15 +24,15 @@ class Algo(models.Model):
         return self.current.name # TODO si current=null ?
     name = property(_get_name) # access name with Algo.name
 
-    
+
     def _get_description(self):
         return self.current.description
     description = property(_get_description) # access description with Algo.description
-    
+
     def _get_category(self):
         return self.current.category
     category = property(_get_category) # access description with Algo.description
-    
+
     def __str__(self):
         return self.name
 
