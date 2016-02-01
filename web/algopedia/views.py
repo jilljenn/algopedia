@@ -69,13 +69,39 @@ class AlgoEdit(UpdateView):
     # atomic : algo.current is updated simultaeneously
     @transaction.atomic
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.author = self.request.user
         form.instance.pk = None # create a new row TODO m2m category ok ?
         form.save()
         # update algo.current
         form.instance.algo.current = form.instance
         form.instance.algo.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+@method_decorator(login_required, name='dispatch')
+class AlgoCreate(CreateView):
+    model = AlgoVersion
+    fields = ['name', 'description', 'category']
+    template_name = 'algopedia/algo_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlgoCreate, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        context['title'] += " - algo - create"
+        context['form_title'] = "Create the description of an algorithm"
+        return context
+
+    # atomic : create algo and algoVersion simultaeneously
+    @transaction.atomic
+    def form_valid(self, form):
+        algo = Algo()
+        algo.save()
+        form.instance.author = self.request.user
+        form.instance.algo = algo
+        form.save()
+        algo.current = form.instance
+        algo.save()
+        return HttpResponseRedirect(form.instance.get_absolute_url())
 
 
 class CategoryDetail(TemplateView):
