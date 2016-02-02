@@ -12,7 +12,7 @@ def checkbox_star(context, id):
     """
     return {
       'request' : context['request'],
-      'stars' : context['stars'],
+      'stars' : context.get('stars', []),
       'id' : id
     }
 
@@ -22,7 +22,7 @@ def implementation_descr(context, implem):
       'request' : context['request'],
       'user' : context['user'],
       'implem' : implem,
-      'stars' : context['stars'],
+      'stars' : context.get('stars', []),
     }
 
 @register.assignment_tag()
