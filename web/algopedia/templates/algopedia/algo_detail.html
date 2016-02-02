@@ -5,10 +5,7 @@
 <div class="container">
 <h4>Algorithme :: {{ object.name }}</h4>
 
-<a href="{% url 'algopedia:algo-edit' object.current_id %}" class="btn btn-sm btn-primary pull-right" style="margin-top: -35px">
-    <span class="glyphicon glyphicon-pencil"></span>
-    Edit description
-</a>
+{% include 'algopedia/algo_wiki_links.html' %}
 
 <h5 class="categories">Categories:</h5>
 <ul class="categories">

@@ -1,0 +1,10 @@
+<div class="pull-right" style="margin-top: -35px">
+    <a href="{% url 'algopedia:algo-edit' object.current_id %}" class="btn btn-sm btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        Edit description
+    </a>
+    <a href="{% url 'algopedia:algo-history' object.pk %}" class="btn btn-sm btn-primary">
+        <span class="glyphicon glyphicon-duplicate"></span>
+        See history
+    </a>
+</div>

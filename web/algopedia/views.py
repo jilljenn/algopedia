@@ -46,6 +46,11 @@ class AlgoDetail(DetailView):
         context['implementations'] = Implementation.objects.filter(algo=self.kwargs['pk']).filter(visible=True).order_by('lang__name', '-stars_count')
         context['categories_current'] = context['object'].category.values_list('pk', flat=True)
         context['title'] += " - algo - " + context['object'].name
+        if 'revision' in self.kwargs:
+            # we change current revision for display
+            context['object'].current = get_object_or_404(AlgoVersion, pk=self.kwargs['revision'])
+            if context['object'].current.algo_id != context['object'].pk:
+                raise Http404
         if self.request.user.is_authenticated():
             context['stars'] = stars_list(Star.objects.filter(user=self.request.user, implementation__algo_id=context['object'].pk, active=True))
         return context
@@ -102,6 +107,20 @@ class AlgoCreate(CreateView):
         algo.current = form.instance
         algo.save()
         return HttpResponseRedirect(form.instance.get_absolute_url())
+
+
+class AlgoHistory(TemplateView):
+    template_name = "algopedia/algo_history.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AlgoHistory, self).get_context_data(**kwargs)
+        context = populate_context(context)
+        pk = self.kwargs['pk']
+        context['object'] = get_object_or_404(Algo, pk=pk)
+        context['object_list'] = AlgoVersion.objects.filter(algo_id=pk).order_by('-date')
+        context['categories_current'] = context['object'].category.values_list('pk', flat=True)
+        context['title'] += " - algo - history"
+        return context
 
 
 class CategoryDetail(TemplateView):

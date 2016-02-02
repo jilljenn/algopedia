@@ -1,0 +1,26 @@
+{% extends "algopedia/base.html" %}
+{% load algopedia_tags %}
+{% block content %}
+
+<div class="container">
+<h4>Algorithme :: {{ object.name }} :: history</h4>
+
+{% include 'algopedia/algo_wiki_links.html' %}
+
+<table class="table table-striped">
+  <tr><th>Current ?</th><th>Author</th><th>Date</th><th>Action</th></tr>
+  {% for version in object_list %}
+      <tr>
+          <td>{% if version.pk = object.current_id %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+          <td>{{ version.author }}</td>
+          <td>{{ version.date }}</td>
+          <td>
+              <a href="{% url 'algopedia:algo-detail' version.algo_id version.pk %}">See <span class="glyphicon glyphicon-search"></span> |</a>
+              <a href="{% url 'algopedia:algo-edit' version.pk %}">Edit <span class="glyphicon glyphicon-pencil"></span></a>
+          </td>
+      </tr>
+  {% endfor %}
+</table>
+
+</div>
+{% endblock %}
